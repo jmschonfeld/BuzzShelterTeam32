@@ -235,6 +235,14 @@ gradle-app.setting
 # Cache of project
 .gradletasknamecache
 
+# Created by https://www.gitignore.io/api/dropbox
+
+### Dropbox ###
+# Dropbox settings and caches
+.dropbox
+.dropbox.attr
+.dropbox.cache
+
 # # Work around https://youtrack.jetbrains.com/issue/IDEA-116898
 # gradle/wrapper/gradle-wrapper.properties
 
