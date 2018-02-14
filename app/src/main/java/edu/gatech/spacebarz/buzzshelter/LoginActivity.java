@@ -21,6 +21,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import edu.gatech.spacebarz.buzzshelter.model.LocalUser;
+
 /**
  * A login screen that offers login via username/password.
  */
@@ -80,6 +82,15 @@ public class LoginActivity extends AppCompatActivity {
 
         mLoginFormView = findViewById(R.id.login_form);
         mProgressView = findViewById(R.id.login_progress);
+
+        if (LocalUser.getInstance(this).isLoggedIn()) {
+            moveToMainActivity();
+        }
+    }
+
+    private void moveToMainActivity() {
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
     }
 
 
@@ -126,7 +137,7 @@ public class LoginActivity extends AppCompatActivity {
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
             showProgress(true);
-            mAuthTask = new UserLoginTask(username, password, this);
+            mAuthTask = new UserLoginTask(username, password);
             mAuthTask.execute((Void) null);
         }
     }
@@ -175,12 +186,10 @@ public class LoginActivity extends AppCompatActivity {
 
         private final String mUser;
         private final String mPassword;
-        private final LoginActivity mLoginActivity;
 
-        UserLoginTask(String user, String password, LoginActivity loginActivity) {
+        UserLoginTask(String user, String password) {
             mUser = user;
             mPassword = password;
-            mLoginActivity = loginActivity;
         }
 
         @Override
@@ -211,8 +220,8 @@ public class LoginActivity extends AppCompatActivity {
             showProgress(false);
 
             if (success) {
-                Intent intent = new Intent(mLoginActivity, MainActivity.class);
-                startActivity(intent);
+                LocalUser.getInstance(getApplicationContext()).login(mUser);
+                moveToMainActivity();
             } else {
                 mPasswordView.setError(getString(R.string.error_incorrect_password));
                 mPasswordView.requestFocus();
