@@ -3,6 +3,7 @@ package edu.gatech.spacebarz.buzzshelter;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 
 import android.os.AsyncTask;
@@ -125,7 +126,7 @@ public class LoginActivity extends AppCompatActivity {
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
             showProgress(true);
-            mAuthTask = new UserLoginTask(email, password);
+            mAuthTask = new UserLoginTask(email, password, this);
             mAuthTask.execute((Void) null);
         }
     }
@@ -174,10 +175,12 @@ public class LoginActivity extends AppCompatActivity {
 
         private final String mUser;
         private final String mPassword;
+        private final LoginActivity mLoginActivity;
 
-        UserLoginTask(String user, String password) {
+        UserLoginTask(String user, String password, LoginActivity loginActivity) {
             mUser = user;
             mPassword = password;
+            mLoginActivity = loginActivity;
         }
 
         @Override
@@ -209,7 +212,8 @@ public class LoginActivity extends AppCompatActivity {
             showProgress(false);
 
             if (success) {
-                //TODO
+                Intent intent = new Intent(mLoginActivity, MainActivity.class);
+                startActivity(intent);
             } else {
                 mPasswordView.setError(getString(R.string.error_incorrect_password));
                 mPasswordView.requestFocus();
