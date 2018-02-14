@@ -2,19 +2,20 @@ package edu.gatech.spacebarz.buzzshelter;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
-import android.annotation.TargetApi;
+import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 
 import android.os.AsyncTask;
 
-import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
@@ -27,7 +28,6 @@ import edu.gatech.spacebarz.buzzshelter.model.LocalUser;
  * A login screen that offers login via username/password.
  */
 public class LoginActivity extends AppCompatActivity {
-
 
     private static final String[] INTERNAL_CREDENTIALS = new String[]{
             "user:pass"
@@ -48,6 +48,8 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+        loggingIn = false;
 
         // Set up the login form.
         loginView = (AutoCompleteTextView) findViewById(R.id.username);
@@ -93,7 +95,6 @@ public class LoginActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-
     /**
      * Attempts to sign in or register the account specified by the login form.
      * If there are form errors (invalid [username], missing fields, etc.), the
@@ -109,8 +110,8 @@ public class LoginActivity extends AppCompatActivity {
         mPasswordView.setError(null);
 
         // Store values at the time of the login attempt.
-        String username = loginView.getText().toString();
         String password = mPasswordView.getText().toString();
+        String username = loginView.getText().toString();
 
         boolean cancel = false;
         View focusView = null;
@@ -145,11 +146,15 @@ public class LoginActivity extends AppCompatActivity {
     /**
      * Shows the progress UI and hides the login form.
      */
-    @TargetApi(Build.VERSION_CODES.HONEYCOMB_MR2)
     private void showProgress(final boolean show) {
-//      Removed Honeycomb progress display
-
         int shortAnimTime = getResources().getInteger(android.R.integer.config_shortAnimTime);
+
+//      Close soft keyboard
+        View v = this.getCurrentFocus();
+        if (v != null) {
+            InputMethodManager im = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+            im.hideSoftInputFromWindow(v.getWindowToken(), 0);
+        }
 
         mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
         mLoginFormView.animate().setDuration(shortAnimTime).alpha(show ? 0 : 1).setListener(new AnimatorListenerAdapter() {
@@ -158,6 +163,7 @@ public class LoginActivity extends AppCompatActivity {
                 mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
             }
         });
+
 
         mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
         mProgressView.animate().setDuration(shortAnimTime).alpha(show ? 1 : 0).setListener(new AnimatorListenerAdapter() {
@@ -173,17 +179,19 @@ public class LoginActivity extends AppCompatActivity {
      * the user.
      */
     public class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
-
         private final String mUser;
         private final String mPassword;
+        private final boolean loginCanceled;
 
         UserLoginTask(String user, String password) {
+            loginCanceled = false;
             mUser = user;
             mPassword = password;
         }
 
         @Override
         protected Boolean doInBackground(Void... params) {
+            loggingIn = true;
             // TODO: attempt authentication against a network service.
 
             try {
@@ -206,6 +214,7 @@ public class LoginActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(final Boolean success) {
+            loggingIn = false;
             mAuthTask = null;
             showProgress(false);
 
@@ -222,7 +231,22 @@ public class LoginActivity extends AppCompatActivity {
         protected void onCancelled() {
             mAuthTask = null;
             showProgress(false);
+            Toast.makeText(getApplicationContext(), R.string.toast_login_canceled, Toast.LENGTH_SHORT).show();
+            Log.i("Login", "Login canceled");
+            cancel(true);
         }
     }
+
+    @Override
+    public void onBackPressed() {
+        if (loggingIn) {
+            mAuthTask.cancel(true);
+            return;
+        }
+
+        super.onBackPressed();
+    }
+
+    private boolean loggingIn;
 }
 
