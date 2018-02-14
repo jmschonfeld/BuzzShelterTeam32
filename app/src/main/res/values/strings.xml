@@ -10,6 +10,7 @@
     <string name="error_incorrect_password">This password is incorrect</string>
     <string name="error_field_required">This field is required</string>
     <string name="action_register">Register</string>
+    <string name="logged_out">Logged out!</string>
 
     <!-- Toast texts -->
     <string name="toast_to_be_implemented">This will be implemented in a later milestone</string>
