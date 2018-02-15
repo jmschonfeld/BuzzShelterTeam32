@@ -135,6 +135,13 @@ public class LoginActivity extends AppCompatActivity {
             // form field with an error.
             focusView.requestFocus();
         } else {
+            // Close soft keyboard
+            View v = this.getCurrentFocus();
+            if (v != null) {
+                InputMethodManager im = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                im.hideSoftInputFromWindow(v.getWindowToken(), 0);
+            }
+
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
             showProgress(true);
@@ -148,13 +155,6 @@ public class LoginActivity extends AppCompatActivity {
      */
     private void showProgress(final boolean show) {
         int shortAnimTime = getResources().getInteger(android.R.integer.config_shortAnimTime);
-
-//      Close soft keyboard
-        View v = this.getCurrentFocus();
-        if (v != null) {
-            InputMethodManager im = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-            im.hideSoftInputFromWindow(v.getWindowToken(), 0);
-        }
 
         mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
         mLoginFormView.animate().setDuration(shortAnimTime).alpha(show ? 0 : 1).setListener(new AnimatorListenerAdapter() {
@@ -192,8 +192,8 @@ public class LoginActivity extends AppCompatActivity {
         @Override
         protected Boolean doInBackground(Void... params) {
             loggingIn = true;
-            // TODO: attempt authentication against a network service.
 
+            // TODO: attempt authentication against a network service.
             try {
                 // Simulate network access.
                 Thread.sleep(2000);
@@ -229,8 +229,12 @@ public class LoginActivity extends AppCompatActivity {
 
         @Override
         protected void onCancelled() {
+            loggingIn = false;
             mAuthTask = null;
             showProgress(false);
+            mPasswordView.setText("");
+            mPasswordView.requestFocus();
+
             Toast.makeText(getApplicationContext(), R.string.toast_login_canceled, Toast.LENGTH_SHORT).show();
             Log.i("Login", "Login canceled");
             cancel(true);

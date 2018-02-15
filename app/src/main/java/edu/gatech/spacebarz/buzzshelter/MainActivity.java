@@ -20,7 +20,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 LocalUser.getInstance(getApplicationContext()).logout();
-                Toast.makeText(getApplicationContext(), R.string.logged_out, Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), R.string.toast_logged_out, Toast.LENGTH_SHORT).show();
             }
         });
     }
