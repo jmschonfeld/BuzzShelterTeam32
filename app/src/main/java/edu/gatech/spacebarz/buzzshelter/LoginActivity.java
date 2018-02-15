@@ -93,6 +93,8 @@ public class LoginActivity extends AppCompatActivity {
     private void moveToMainActivity() {
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
+        mPasswordView.setText("");
+        mPasswordView.requestFocus();
     }
 
     /**
