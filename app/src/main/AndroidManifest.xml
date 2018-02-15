@@ -18,7 +18,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".MainActivity"></activity>
+
+        <activity
+            android:name=".MainActivity"
+            android:parentActivityName="edu.gatech.spacebarz.buzzshelter.LoginActivity">
+        </activity>
     </application>
 
 </manifest>
