@@ -1,17 +1,12 @@
 package edu.gatech.spacebarz.buzzshelter;
 
-import android.content.Intent;
-import android.support.v4.app.NavUtils;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
-import edu.gatech.spacebarz.buzzshelter.model.LocalUser;
+import edu.gatech.spacebarz.buzzshelter.model.FirebaseAuthManager;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -24,7 +19,7 @@ public class MainActivity extends AppCompatActivity {
         logoutButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                LocalUser.getInstance(getApplicationContext()).logout();
+                FirebaseAuthManager.signout();
                 Toast.makeText(getApplicationContext(), R.string.toast_logged_out, Toast.LENGTH_SHORT).show();
                 returnToLogin();
             }
