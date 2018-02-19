@@ -22,6 +22,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import edu.gatech.spacebarz.buzzshelter.model.FirebaseManager;
 import edu.gatech.spacebarz.buzzshelter.model.LocalUser;
 
 /**
@@ -48,6 +49,8 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+        FirebaseManager.initialize();
 
         loggingIn = false;
 

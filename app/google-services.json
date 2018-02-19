@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "537383737030",
+    "firebase_url": "https://gatech-shelterseeker.firebaseio.com",
+    "project_id": "gatech-shelterseeker",
+    "storage_bucket": "gatech-shelterseeker.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:537383737030:android:93e8a419346aeb89",
+        "android_client_info": {
+          "package_name": "edu.gatech.spacebarz.buzzshelter"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "537383737030-e7fosah3r5adnjr13mjvmbden2bav53g.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "edu.gatech.spacebarz.buzzshelter",
+            "certificate_hash": "b51ad6d0a2a599eacec4ce903b9b823184935cf3"
+          }
+        },
+        {
+          "client_id": "537383737030-ftnsqt72rh4ihmf5bk4p1ni4lnh2uivo.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBK2vVGDRJCR0RfO_ZBVTyo7Im_Zp5TLys"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "537383737030-ftnsqt72rh4ihmf5bk4p1ni4lnh2uivo.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
