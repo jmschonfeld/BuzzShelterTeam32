@@ -62,6 +62,10 @@ public class FirebaseManager {
                 });
     }
 
+    public static void signinAnonymous() {
+        auth.signInAnonymously();
+    }
+
     public static void sendRecoveryEmail(String email) {
         auth.sendPasswordResetEmail(email);
     }
