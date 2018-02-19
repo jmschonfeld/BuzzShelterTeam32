@@ -22,8 +22,9 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import edu.gatech.spacebarz.buzzshelter.model.FirebaseManager;
-import edu.gatech.spacebarz.buzzshelter.model.LocalUser;
+import java.util.concurrent.CountDownLatch;
+
+import edu.gatech.spacebarz.buzzshelter.model.FirebaseAuthManager;
 
 /**
  * A login screen that offers login via username/password.
@@ -50,7 +51,7 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        FirebaseManager.initialize();
+        FirebaseAuthManager.initialize();
 
         loggingIn = false;
 
@@ -88,7 +89,7 @@ public class LoginActivity extends AppCompatActivity {
         mLoginFormView = findViewById(R.id.login_form);
         mProgressView = findViewById(R.id.login_progress);
 
-        if (LocalUser.getInstance(this).isLoggedIn()) {
+        if (FirebaseAuthManager.isLoggedIn()) {
             moveToMainActivity();
         }
     }
@@ -198,23 +199,21 @@ public class LoginActivity extends AppCompatActivity {
         protected Boolean doInBackground(Void... params) {
             loggingIn = true;
 
-            // TODO: attempt authentication against a network service.
+            final CountDownLatch latch = new CountDownLatch(1);
+            FirebaseAuthManager.signin(mUser, mPassword, new Runnable() {
+                @Override
+                public void run() {
+                    latch.countDown();
+                }
+            });
+
             try {
-                // Simulate network access.
-                Thread.sleep(2000);
+                latch.await();
             } catch (InterruptedException e) {
+                e.printStackTrace();
                 return false;
             }
-
-            for (String credential : INTERNAL_CREDENTIALS) {
-                String[] pieces = credential.split(":");
-                if (pieces[0].equals(mUser)) {
-                    // Account exists, return true if the password matches.
-                    return pieces[1].equals(mPassword);
-                }
-            }
-
-            return false;
+            return FirebaseAuthManager.isLoggedIn();
         }
 
         @Override
@@ -224,7 +223,6 @@ public class LoginActivity extends AppCompatActivity {
             showProgress(false);
 
             if (success) {
-                LocalUser.getInstance(getApplicationContext()).login(mUser);
                 moveToMainActivity();
             } else {
                 mPasswordView.setError(getString(R.string.error_incorrect_password));
