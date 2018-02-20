@@ -25,6 +25,7 @@
     <string name="registration_register">Register</string>
     <string name="registration_userType">I am...</string>
 
+
     <!-- Strings related to login -->
     <string name="prompt_email">Email</string>
     <string name="error_invalid_email">This email address is invalid</string>
