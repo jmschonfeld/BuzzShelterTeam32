@@ -9,7 +9,7 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="edu.gatech.spacebarz.buzzshelter.register">
+    tools:context="edu.gatech.spacebarz.buzzshelter.RegisterActivity">
 
     <!-- Login progress -->
 
@@ -37,7 +37,7 @@
         android:textAppearance="@android:style/TextAppearance.Material.Medium" />
 
     <android.support.design.widget.TextInputEditText
-        android:id="@+id/input_username"
+        android:id="@+id/input_email"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
