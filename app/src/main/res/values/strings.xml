@@ -2,7 +2,7 @@
     <string name="app_name">BuzzShelter</string>
 
     <!-- Strings related to login -->
-    <string name="prompt_username">Username</string>
+    <string name="prompt_email">Email</string>
     <string name="prompt_password">Password</string>
     <string name="action_sign_in">Sign in</string>
     <string name="action_sign_in_short">Sign in</string>
@@ -10,12 +10,16 @@
     <string name="error_incorrect_password">This password is incorrect</string>
     <string name="error_field_required">This field is required</string>
     <string name="action_register">Register</string>
+    <string name="error_invalid_email">This email address is invalid</string>
+    <string name="error_invalid_password">This password is too short</string>
+    <string name="permission_rationale">"Contacts permissions are needed for providing email completions."</string>
 
     <!-- Toast texts -->
     <string name="toast_to_be_implemented">This will be implemented in a later milestone</string>
     <string name="toast_login_canceled">Login canceled</string>
     <string name="toast_logged_out">Logged out!</string>
     <string name="title_activity_register">Register</string>
+    <string name="toast_account_created">Account created</string>
 
     <!-- Strings related to registration -->
     <string name="registration_name">Name</string>
@@ -24,13 +28,7 @@
     <string name="registration_phoneNumber">Phone Number</string>
     <string name="registration_register">Register</string>
     <string name="registration_userType">I am...</string>
+    <string name="error_password_requirements">Password must be at least 6 characters</string>
+    <string name="error_email_already_registered">Email already registered</string>
 
-
-    <!-- Strings related to login -->
-    <string name="prompt_email">Email</string>
-    <string name="error_invalid_email">This email address is invalid</string>
-    <string name="error_invalid_password">This password is too short</string>
-    <string name="permission_rationale">"Contacts permissions are needed for providing email
-        completions."
-    </string>
 </resources>

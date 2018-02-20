@@ -3,7 +3,6 @@ package edu.gatech.spacebarz.buzzshelter.model;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -38,12 +37,13 @@ public class FirebaseAuthManager {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
-                            Log.d(TAG, "createUserWithEmail: success");
+                            Log.i(TAG, "createUserWithEmail: success");
                             if (completion != null) {
                                 completion.run();
                             }
                         } else {
-                            Log.w(TAG, "createUserWithEmail: failure", task.getException());
+                            Log.i("authFeedback",task.getException().getMessage());
+                            FirebaseAuthManager.setAccountCreateException(task.getException());
                             if (completion != null) {
                                 completion.run();
                             }
@@ -111,4 +111,13 @@ public class FirebaseAuthManager {
         return auth.getCurrentUser().getUid();
     }
 
+    public static Exception getAccountCreateException() {
+        return accountCreateException;
+    }
+
+    public static void setAccountCreateException(Exception e) {
+        accountCreateException = e;
+    }
+
+    private static Exception accountCreateException;
 }
