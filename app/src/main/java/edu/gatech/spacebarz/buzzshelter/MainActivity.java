@@ -15,12 +15,10 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Button logoutButton = (Button) findViewById(R.id.logout_button);
+        Button logoutButton = findViewById(R.id.logout_button);
         logoutButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                FirebaseAuthManager.signout();
-                Toast.makeText(getApplicationContext(), R.string.toast_logged_out, Toast.LENGTH_SHORT).show();
                 returnToLogin();
             }
         });
@@ -28,5 +26,12 @@ public class MainActivity extends AppCompatActivity {
 
     private void returnToLogin() {
         finish();
+    }
+
+    @Override
+    public void finish() {
+        super.finish();
+        FirebaseAuthManager.signout();
+        Toast.makeText(getApplicationContext(), R.string.toast_logged_out, Toast.LENGTH_SHORT).show();
     }
 }

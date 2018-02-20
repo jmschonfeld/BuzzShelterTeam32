@@ -4,11 +4,9 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.content.Context;
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
-
 import android.os.AsyncTask;
-
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -31,9 +29,9 @@ import edu.gatech.spacebarz.buzzshelter.model.FirebaseAuthManager;
  */
 public class LoginActivity extends AppCompatActivity {
 
-    private static final String[] INTERNAL_CREDENTIALS = new String[]{
-            "user:pass"
-    };
+//    private static final String[] INTERNAL_CREDENTIALS = new String[]{
+//            "user:pass"
+//    };
 
     /**
      * Keep track of the login task to ensure we can cancel it if requested.
@@ -56,9 +54,9 @@ public class LoginActivity extends AppCompatActivity {
         loggingIn = false;
 
         // Set up the login form.
-        loginView = (AutoCompleteTextView) findViewById(R.id.username);
+        loginView = findViewById(R.id.username);
 
-        mPasswordView = (EditText) findViewById(R.id.password);
+        mPasswordView = findViewById(R.id.password);
         mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
@@ -70,15 +68,15 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
-        Button SignInButton = (Button) findViewById(R.id.sign_in_button);
-        SignInButton.setOnClickListener(new OnClickListener() {
+        Button signInButton = findViewById(R.id.sign_in_button);
+        signInButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
                 attemptLogin();
             }
         });
 
-        Button registerButton = (Button) findViewById(R.id.signin_register_button);
+        Button registerButton = findViewById(R.id.signin_register_button);
         registerButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -122,8 +120,8 @@ public class LoginActivity extends AppCompatActivity {
         mPasswordView.setError(null);
 
         // Store values at the time of the login attempt.
-        String password = mPasswordView.getText().toString();
-        String username = loginView.getText().toString();
+        String password = mPasswordView.getText().toString().trim();
+        String username = loginView.getText().toString().trim();
 
         boolean cancel = false;
         View focusView = null;
@@ -193,10 +191,8 @@ public class LoginActivity extends AppCompatActivity {
     public class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
         private final String mUser;
         private final String mPassword;
-        private final boolean loginCanceled;
 
         UserLoginTask(String user, String password) {
-            loginCanceled = false;
             mUser = user;
             mPassword = password;
         }
@@ -262,4 +258,3 @@ public class LoginActivity extends AppCompatActivity {
 
     private boolean loggingIn;
 }
-
