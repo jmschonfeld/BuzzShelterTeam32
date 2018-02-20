@@ -78,7 +78,8 @@ public class LoginActivity extends AppCompatActivity {
         registerButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(getApplicationContext(), R.string.toast_to_be_implemented, Toast.LENGTH_SHORT).show();
+                moveToRegisterActivity();
+                //Toast.makeText(getApplicationContext(), R.string.toast_to_be_implemented, Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -88,6 +89,11 @@ public class LoginActivity extends AppCompatActivity {
         if (LocalUser.getInstance(this).isLoggedIn()) {
             moveToMainActivity();
         }
+    }
+
+    private void moveToRegisterActivity(){
+        Intent intent = new Intent(this, RegisterActivity.class);
+        startActivity(intent);
     }
 
     private void moveToMainActivity() {
