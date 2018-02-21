@@ -18,6 +18,10 @@ import static android.content.ContentValues.TAG;
 
 public class FirebaseAuthManager {
 
+    public interface FirebaseAuthCallback {
+        void callback(boolean success, @Nullable Exception exception);
+    }
+
     private static FirebaseAuth auth;
 
     public static void initialize() {
@@ -32,39 +36,39 @@ public class FirebaseAuthManager {
         return auth.getCurrentUser();
     }
 
-    public static void signupUser(String email, String password, @Nullable final Runnable completion) {
+    public static void signupUser(String email, String password, @Nullable final FirebaseAuthCallback completion) {
         auth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             Log.i(TAG, "createUserWithEmail: success");
                             if (completion != null) {
-                                completion.run();
+                                completion.callback(true, null);
                             }
                         } else {
                             Log.i("authFeedback",task.getException().getMessage());
                             FirebaseAuthManager.setAccountCreateException(task.getException());
                             if (completion != null) {
-                                completion.run();
+                                completion.callback(false, task.getException());
                             }
                         }
                     }
                 });
     }
 
-    public static void signin(String email, String password, @Nullable final Runnable completion) {
+    public static void signin(String email, String password, @Nullable final FirebaseAuthCallback completion) {
         auth.signInWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             Log.d(TAG, "signInWithEmail: success");
                             if (completion != null) {
-                                completion.run();
+                                completion.callback(true, null);
                             }
                         } else {
                             Log.w(TAG, "signInWithEmail: failure", task.getException());
                             if (completion != null) {
-                                completion.run();
+                                completion.callback(false, task.getException());
                             }
                         }
                     }

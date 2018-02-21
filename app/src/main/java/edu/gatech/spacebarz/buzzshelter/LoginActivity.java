@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
@@ -19,6 +20,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 
 import java.util.concurrent.CountDownLatch;
 
@@ -191,6 +194,8 @@ public class LoginActivity extends AppCompatActivity {
     public class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
         private final String mUser;
         private final String mPassword;
+        private Exception exe;
+        private boolean succ;
 
         UserLoginTask(String user, String password) {
             mUser = user;
@@ -202,9 +207,11 @@ public class LoginActivity extends AppCompatActivity {
             loggingIn = true;
 
             final CountDownLatch latch = new CountDownLatch(1);
-            FirebaseAuthManager.signin(mUser, mPassword, new Runnable() {
+            FirebaseAuthManager.signin(mUser, mPassword, new FirebaseAuthManager.FirebaseAuthCallback() {
                 @Override
-                public void run() {
+                public void callback(boolean success, @Nullable Exception exception) {
+                    succ = success;
+                    exe = exception;
                     latch.countDown();
                 }
             });
@@ -215,7 +222,7 @@ public class LoginActivity extends AppCompatActivity {
                 e.printStackTrace();
                 return false;
             }
-            return FirebaseAuthManager.isLoggedIn();
+            return succ;
         }
 
         @Override
@@ -227,8 +234,12 @@ public class LoginActivity extends AppCompatActivity {
             if (success) {
                 moveToMainActivity();
             } else {
-                mPasswordView.setError(getString(R.string.error_incorrect_password));
-                mPasswordView.requestFocus();
+                if (exe instanceof FirebaseAuthInvalidCredentialsException) {
+                    mPasswordView.requestFocus();
+                    mPasswordView.setError("Invalid email or password");
+                } else {
+                    exe.printStackTrace();
+                }
             }
         }
 
