@@ -3,6 +3,7 @@ package edu.gatech.spacebarz.buzzshelter;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.util.Patterns;
@@ -95,6 +96,11 @@ public class RegisterActivity extends AppCompatActivity {
 
 
     public class UserRegistrationTask extends AsyncTask<Void, Void, Boolean> {
+        private Exception exe;
+        private boolean succ;
+        private final String email;
+        private final String password;
+
         UserRegistrationTask(String eml, String pass) {
             email = eml;
             password = pass;
@@ -103,9 +109,11 @@ public class RegisterActivity extends AppCompatActivity {
         @Override
         protected Boolean doInBackground(Void... params) {
             final CountDownLatch l = new CountDownLatch(1);
-            FirebaseAuthManager.signupUser(email, password, new Runnable() {
+            FirebaseAuthManager.signupUser(email, password, new FirebaseAuthManager.FirebaseAuthCallback() {
                 @Override
-                public void run() {
+                public void callback(boolean success, @Nullable Exception exception) {
+                    exe = exception;
+                    succ = success;
                     l.countDown();
                 }
             });
@@ -115,7 +123,7 @@ public class RegisterActivity extends AppCompatActivity {
                 e.printStackTrace();
                 return false;
             }
-            return FirebaseAuthManager.getAccountCreateException() == null;
+            return succ;
         }
 
         @Override
@@ -124,29 +132,22 @@ public class RegisterActivity extends AppCompatActivity {
             if (success) {
                 closeOnSuccess();
             } else {
-                Exception exe = FirebaseAuthManager.getAccountCreateException();
                 View focusView = null;
-
-                try {
-                    throw exe;
-                } catch (FirebaseAuthUserCollisionException e) {
+                if (exe instanceof FirebaseAuthUserCollisionException){
                     emailView.setError(getString(R.string.error_email_already_registered));
                     focusView = emailView;
                     closeSoftKeyboard();
-                } catch (FirebaseAuthWeakPasswordException e) {
+                } else if (exe instanceof FirebaseAuthWeakPasswordException) {
                     passwordView.setError(getString(R.string.error_password_requirements));
                     focusView = passwordView;
-                } catch (Exception e) {
-                    Log.e("Registration(Firebase)", e.getMessage());
-                } finally {
-                    if (focusView != null)
-                        focusView.requestFocus();
+                } else {
+                    Log.e("Registration(Firebase)", exe.getMessage());
                 }
+
+                if (focusView != null)
+                    focusView.requestFocus();
             }
         }
-
-        private final String email;
-        private final String password;
     }
 
     private EditText nameView;
