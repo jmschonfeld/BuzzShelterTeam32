@@ -10,12 +10,12 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
+import android.util.Patterns;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -27,22 +27,14 @@ import java.util.concurrent.CountDownLatch;
 
 import edu.gatech.spacebarz.buzzshelter.model.FirebaseAuthManager;
 
-/**
- * A login screen that offers login via username/password.
- */
 public class LoginActivity extends AppCompatActivity {
-
-//    private static final String[] INTERNAL_CREDENTIALS = new String[]{
-//            "user:pass"
-//    };
-
     /**
      * Keep track of the login task to ensure we can cancel it if requested.
      */
     private UserLoginTask mAuthTask = null;
 
     // UI references.
-    private AutoCompleteTextView loginView;
+    private EditText loginView;
     private EditText mPasswordView;
     private View mProgressView;
     private View mLoginFormView;
@@ -57,7 +49,7 @@ public class LoginActivity extends AppCompatActivity {
         loggingIn = false;
 
         // Set up the login form.
-        loginView = findViewById(R.id.username);
+        loginView = findViewById(R.id.email);
 
         mPasswordView = findViewById(R.id.password);
         mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
@@ -83,8 +75,8 @@ public class LoginActivity extends AppCompatActivity {
         registerButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
+                clearFields();
                 moveToRegisterActivity();
-                //Toast.makeText(getApplicationContext(), R.string.toast_to_be_implemented, Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -104,8 +96,8 @@ public class LoginActivity extends AppCompatActivity {
     private void moveToMainActivity() {
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
-        mPasswordView.setText("");
-        mPasswordView.requestFocus();
+        clearFields();
+        loginView.requestFocus();
     }
 
     /**
@@ -124,7 +116,7 @@ public class LoginActivity extends AppCompatActivity {
 
         // Store values at the time of the login attempt.
         String password = mPasswordView.getText().toString().trim();
-        String username = loginView.getText().toString().trim();
+        String email = loginView.getText().toString().trim();
 
         boolean cancel = false;
         View focusView = null;
@@ -136,9 +128,16 @@ public class LoginActivity extends AppCompatActivity {
             cancel = true;
         }
 
-        // Check for a valid [username].
-        if (TextUtils.isEmpty(username)) {
+        // Check for a empty email
+        if (TextUtils.isEmpty(email)) {
             loginView.setError(getString(R.string.error_field_required));
+            focusView = loginView;
+            cancel = true;
+        }
+
+        // Check for valid email format
+        if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+            loginView.setError(getString(R.string.error_invalid_email));
             focusView = loginView;
             cancel = true;
         }
@@ -158,7 +157,7 @@ public class LoginActivity extends AppCompatActivity {
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
             showProgress(true);
-            mAuthTask = new UserLoginTask(username, password);
+            mAuthTask = new UserLoginTask(email, password);
             mAuthTask.execute((Void) null);
         }
     }
@@ -255,6 +254,11 @@ public class LoginActivity extends AppCompatActivity {
             Log.i("Login", "Login canceled");
             cancel(true);
         }
+    }
+
+    private void clearFields() {
+        loginView.setText("");
+        mPasswordView.setText("");
     }
 
     @Override

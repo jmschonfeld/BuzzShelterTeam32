@@ -47,7 +47,6 @@ public class FirebaseAuthManager {
                             }
                         } else {
                             Log.i("authFeedback",task.getException().getMessage());
-                            FirebaseAuthManager.setAccountCreateException(task.getException());
                             if (completion != null) {
                                 completion.callback(false, task.getException());
                             }
@@ -114,14 +113,4 @@ public class FirebaseAuthManager {
 
         return auth.getCurrentUser().getUid();
     }
-
-    public static Exception getAccountCreateException() {
-        return accountCreateException;
-    }
-
-    public static void setAccountCreateException(Exception e) {
-        accountCreateException = e;
-    }
-
-    private static Exception accountCreateException;
 }

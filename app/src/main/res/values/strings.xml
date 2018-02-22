@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">BuzzShelter</string>
+    <string name="app_name">Shelter Seeker</string>
 
     <!-- Strings related to login -->
     <string name="prompt_email">Email</string>
@@ -27,7 +27,7 @@
     <string name="registration_password">Password</string>
     <string name="registration_phoneNumber">Phone Number</string>
     <string name="registration_register">Register</string>
-    <string name="registration_userType">I am...</string>
+    <string name="registration_userType">I am…</string>
     <string name="error_password_requirements">Password must be at least 6 characters</string>
     <string name="error_email_already_registered">Email already registered</string>
 
