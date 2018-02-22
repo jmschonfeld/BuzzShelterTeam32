@@ -12,6 +12,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -35,6 +36,9 @@ public class RegisterActivity extends AppCompatActivity {
         passwordView = findViewById(R.id.input_password);
         phoneView = findViewById(R.id.input_phoneNumber);
         userTypeSpinner = findViewById(R.id.spinner_userType);
+        progressBar = findViewById(R.id.progressBar);
+
+        progressBar.setVisibility(View.INVISIBLE);
 
         //Spinner
         ArrayAdapter<String> adapter = new ArrayAdapter(this, android.R.layout.simple_spinner_item, UserRole.values());
@@ -81,7 +85,6 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     private void closeSoftKeyboard() {
-        // Close soft keyboard
         View v = this.getCurrentFocus();
         if (v != null) {
             InputMethodManager im = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -91,6 +94,8 @@ public class RegisterActivity extends AppCompatActivity {
 
     public void closeOnSuccess() {
         Toast.makeText(getApplicationContext(), R.string.toast_account_created, Toast.LENGTH_SHORT).show();
+//      Undo auto sign in
+        FirebaseAuthManager.signout();
         finish();
     }
 
@@ -104,6 +109,8 @@ public class RegisterActivity extends AppCompatActivity {
         UserRegistrationTask(String eml, String pass) {
             email = eml;
             password = pass;
+            progressBar.setVisibility(View.VISIBLE);
+            closeSoftKeyboard();
         }
 
         @Override
@@ -128,6 +135,7 @@ public class RegisterActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(final Boolean success) {
+            progressBar.setVisibility(View.INVISIBLE);
             regTask = null;
             if (success) {
                 closeOnSuccess();
@@ -155,6 +163,8 @@ public class RegisterActivity extends AppCompatActivity {
     private EditText passwordView;
     private EditText phoneView;
     private Spinner userTypeSpinner;
+
+    private ProgressBar progressBar;
 
     private UserRegistrationTask regTask = null;
 

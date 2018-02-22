@@ -92,4 +92,15 @@
         android:text="@string/registration_register"
         android:textStyle="bold"/>
 
+    <ProgressBar
+        android:id="@+id/progressBar"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:indeterminate="true"
+        android:max="100"
+        android:backgroundTint="#fafafa"
+        android:layout_below="@+id/framelauout"
+        android:indeterminateTint="#1a09d6"
+        android:layout_marginTop="8dp"/>
 </LinearLayout>
