@@ -15,7 +15,7 @@ import java.util.concurrent.CountDownLatch;
 public class FirebaseDBManager {
 
     public static UserInfo retrieveUserInfo(String uid) {
-        RetrieveObjectSynchronousTask<UserInfo> task = new RetrieveObjectSynchronousTask<>(DatabaseKey.SSUSER, uid, UserInfo.class);
+        RetrieveObjectSynchronousTask<UserInfo> task = new RetrieveObjectSynchronousTask<>(DatabaseKey.USER, uid, UserInfo.class);
         task.run();
         return task.getValue();
     }
@@ -30,7 +30,7 @@ public class FirebaseDBManager {
     /*
     public static String insertNewUserInfo(UserInfo user) {
         FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference myRef = database.getReference("/" + DatabaseKey.SSUSER);
+        DatabaseReference myRef = database.getReference("/" + DatabaseKey.USER);
         DatabaseReference userKey = myRef.push();
         user.uid = userKey.getKey();
         userKey.setValue(user);
@@ -39,7 +39,7 @@ public class FirebaseDBManager {
 
     public static void setUserInfo(UserInfo updated) {
         FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference myRef = database.getReference("/" + DatabaseKey.SSUSER + "/" + updated.getUid());
+        DatabaseReference myRef = database.getReference("/" + DatabaseKey.USER + "/" + updated.getUid());
         myRef.setValue(updated);
     }
 
@@ -131,7 +131,7 @@ public class FirebaseDBManager {
     }
 
     private enum DatabaseKey {
-        SSUSER("SSUser"), SSSHELTER("SSShelter");
+        USER("SSUser"), SHELTER("SSShelter");
 
         private String key;
         private DatabaseKey(String k) {
