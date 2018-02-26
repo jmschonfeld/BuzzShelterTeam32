@@ -26,6 +26,10 @@ public class FirebaseAuthManager {
         return auth.getCurrentUser() != null;
     }
 
+    public static String getCurrentUserUID() {
+        return auth.getCurrentUser().getUid();
+    }
+
     public static FirebaseUser getCurrentUser() {
         return auth.getCurrentUser();
     }

@@ -23,6 +23,7 @@ import com.google.firebase.auth.FirebaseAuthWeakPasswordException;
 import java.util.concurrent.CountDownLatch;
 
 import edu.gatech.spacebarz.buzzshelter.model.FirebaseAuthManager;
+import edu.gatech.spacebarz.buzzshelter.model.FirebaseDBManager;
 
 public class RegisterActivity extends AppCompatActivity {
 
@@ -42,7 +43,7 @@ public class RegisterActivity extends AppCompatActivity {
         progressBar.setVisibility(View.INVISIBLE);
 
         //Spinner
-        ArrayAdapter<UserRole> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, UserRole.values());
+        ArrayAdapter<FirebaseDBManager.UserRole> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, FirebaseDBManager.UserRole.values());
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         userTypeSpinner.setAdapter(adapter);
 
@@ -67,6 +68,9 @@ public class RegisterActivity extends AppCompatActivity {
 
         String eml = emailView.getText().toString().trim();
         String pass = passwordView.getText().toString().trim();
+        String name = nameView.getText().toString().trim();
+        String phone = phoneView.getText().toString().trim();
+        FirebaseDBManager.UserRole role = FirebaseDBManager.UserRole.findUserRole(userTypeSpinner.getSelectedItem().toString());
 
         if (!Patterns.EMAIL_ADDRESS.matcher(eml).matches()) {
             preSubErr = true;
@@ -81,7 +85,7 @@ public class RegisterActivity extends AppCompatActivity {
             return;
         }
 
-        regTask = new UserRegistrationTask(eml, pass);
+        regTask = new UserRegistrationTask(eml, pass, name, phone, role);
         regTask.execute((Void) null);
     }
 
@@ -106,12 +110,15 @@ public class RegisterActivity extends AppCompatActivity {
     public class UserRegistrationTask extends AsyncTask<Void, Void, Boolean> {
         private Exception exe;
         private boolean succ;
-        private final String email;
-        private final String password;
+        private final String email, password, name, phone;
+        private final FirebaseDBManager.UserRole role;
 
-        UserRegistrationTask(String eml, String pass) {
+        UserRegistrationTask(String eml, String pass, String nm, String phn, FirebaseDBManager.UserRole rl) {
             email = eml;
             password = pass;
+            name = nm;
+            phone = phn;
+            role = rl;
             progressBar.setVisibility(View.VISIBLE);
             closeSoftKeyboard();
         }
@@ -133,6 +140,13 @@ public class RegisterActivity extends AppCompatActivity {
                 e.printStackTrace();
                 return false;
             }
+            if (!succ) {
+                return false;
+            }
+
+            FirebaseDBManager.setUserInfo(new FirebaseDBManager.UserInfo(FirebaseAuthManager.getCurrentUserUID(), name, phone, role));
+            Log.i("Registration", "Created new user registration with UID " + FirebaseAuthManager.getCurrentUserUID());
+
             return succ;
         }
 
@@ -170,13 +184,4 @@ public class RegisterActivity extends AppCompatActivity {
     private ProgressBar progressBar;
 
     private UserRegistrationTask regTask = null;
-
-    private enum UserRole {
-        USER("User"), ADMINISTRATOR("Administrator"), SHELTER_EMPLOYEE("Shelter Employee");
-
-        UserRole(String s) {
-            label = s;
-        }
-        private String label;
-    }
 }
