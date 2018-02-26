@@ -99,7 +99,6 @@
                 android:indeterminate="true"
                 android:max="100"
                 android:backgroundTint="#fafafa"
-                android:layout_below="@+id/framelauout"
                 android:indeterminateTint="#1a09d6"
                 android:layout_marginTop="8dp"/>
         </LinearLayout>
