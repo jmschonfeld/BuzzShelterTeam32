@@ -26,6 +26,7 @@ import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 import java.util.concurrent.CountDownLatch;
 
 import edu.gatech.spacebarz.buzzshelter.model.FirebaseAuthManager;
+import edu.gatech.spacebarz.buzzshelter.model.FirebaseDBManager;
 
 public class LoginActivity extends AppCompatActivity {
     private UserLoginTask mAuthTask = null;
@@ -195,6 +196,7 @@ public class LoginActivity extends AppCompatActivity {
                 e.printStackTrace();
                 return false;
             }
+
             return succ;
         }
 
