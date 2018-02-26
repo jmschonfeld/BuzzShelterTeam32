@@ -1,7 +1,6 @@
 package edu.gatech.spacebarz.buzzshelter.model;
 
 
-import android.provider.ContactsContract;
 import android.util.Log;
 
 import com.google.firebase.database.DataSnapshot;
@@ -16,7 +15,7 @@ import java.util.concurrent.CountDownLatch;
 public class FirebaseDBManager {
 
     public static UserInfo retrieveUserInfo(String uid) {
-        RetrieveObjectTask<UserInfo> task = new RetrieveObjectTask<>(DatabaseKey.SSUSER, uid, UserInfo.class);
+        RetrieveObjectSynchronousTask<UserInfo> task = new RetrieveObjectSynchronousTask<>(DatabaseKey.SSUSER, uid, UserInfo.class);
         task.run();
         return task.getValue();
     }
@@ -37,13 +36,13 @@ public class FirebaseDBManager {
         myRef.setValue(updated);
     }
 
-    private static class RetrieveObjectTask<T> {
+    private static class RetrieveObjectSynchronousTask<T> {
 
         private String key;
         private Class<T> type;
         private T value;
 
-        private RetrieveObjectTask(DatabaseKey dbKey, String id, Class<T> type) {
+        private RetrieveObjectSynchronousTask(DatabaseKey dbKey, String id, Class<T> type) {
             this.key = "/" + dbKey + "/" + id;
             this.type = type;
         }
