@@ -3,18 +3,12 @@ package edu.gatech.spacebarz.buzzshelter.model;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
-
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-
 import static android.content.ContentValues.TAG;
-
-/**
- * Created by jmschonfeld on 2/19/18.
- */
 
 public class FirebaseAuthManager {
 
@@ -46,7 +40,8 @@ public class FirebaseAuthManager {
                                 completion.callback(true, null);
                             }
                         } else {
-                            Log.i("authFeedback",task.getException().getMessage());
+                            if (task.getException() != null)
+                                Log.i("authFeedback",task.getException().getMessage());
                             if (completion != null) {
                                 completion.callback(false, task.getException());
                             }
@@ -86,6 +81,7 @@ public class FirebaseAuthManager {
         auth.sendPasswordResetEmail(email);
     }
 
+    @Nullable
     public static String getUserDisplayName() {
         if (auth.getCurrentUser() == null)
             return null;
@@ -93,6 +89,7 @@ public class FirebaseAuthManager {
         return auth.getCurrentUser().getDisplayName();
     }
 
+    @Nullable
     public static String getUserEmail() {
         if (auth.getCurrentUser() == null)
             return null;
@@ -100,6 +97,7 @@ public class FirebaseAuthManager {
         return auth.getCurrentUser().getEmail();
     }
 
+    @Nullable
     public static String getUserPhone() {
         if (auth.getCurrentUser() == null)
             return null;
@@ -107,6 +105,7 @@ public class FirebaseAuthManager {
         return auth.getCurrentUser().getPhoneNumber();
     }
 
+    @Nullable
     public static String getUserID() {
         if (auth.getCurrentUser() == null)
             return null;

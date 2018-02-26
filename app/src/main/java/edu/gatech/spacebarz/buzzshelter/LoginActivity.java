@@ -1,7 +1,6 @@
 package edu.gatech.spacebarz.buzzshelter;
 
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -29,16 +28,11 @@ import java.util.concurrent.CountDownLatch;
 import edu.gatech.spacebarz.buzzshelter.model.FirebaseAuthManager;
 
 public class LoginActivity extends AppCompatActivity {
-    /**
-     * Keep track of the login task to ensure we can cancel it if requested.
-     */
     private UserLoginTask mAuthTask = null;
 
     // UI references.
     private EditText loginView;
     private EditText mPasswordView;
-    private View mProgressView;
-    private View mLoginFormView;
     private ProgressBar progressBar;
 
     @Override
@@ -82,8 +76,6 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
-        mLoginFormView = findViewById(R.id.login_form);
-        mProgressView = findViewById(R.id.login_progress);
         progressBar = findViewById(R.id.login_progressBar);
 
         progressBar.setVisibility(View.INVISIBLE);
@@ -156,7 +148,8 @@ public class LoginActivity extends AppCompatActivity {
             View v = this.getCurrentFocus();
             if (v != null) {
                 InputMethodManager im = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                im.hideSoftInputFromWindow(v.getWindowToken(), 0);
+                if (im != null)
+                    im.hideSoftInputFromWindow(v.getWindowToken(), 0);
             }
 
 //          BG login task
@@ -169,6 +162,7 @@ public class LoginActivity extends AppCompatActivity {
      * Represents an asynchronous login/registration task used to authenticate
      * the user.
      */
+    @SuppressLint("StaticFieldLeak")
     public class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
         private final String mUser;
         private final String mPassword;
