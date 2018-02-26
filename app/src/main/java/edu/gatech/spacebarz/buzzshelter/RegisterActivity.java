@@ -21,6 +21,7 @@ import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.google.firebase.auth.FirebaseAuthWeakPasswordException;
 
 import java.util.concurrent.CountDownLatch;
+import java.util.regex.Pattern;
 
 import edu.gatech.spacebarz.buzzshelter.model.FirebaseAuthManager;
 import edu.gatech.spacebarz.buzzshelter.model.FirebaseDBManager;
@@ -72,13 +73,24 @@ public class RegisterActivity extends AppCompatActivity {
         String phone = phoneView.getText().toString().trim();
         FirebaseDBManager.UserRole role = FirebaseDBManager.UserRole.findUserRole(userTypeSpinner.getSelectedItem().toString());
 
+        if (!Pattern.matches("\\A[A-Za-z]+\\s[A-Za-z]+\\z", name)) {
+//          Possibly implement better string handling
+            preSubErr = true;
+            nameView.setError(getString(R.string.error_invalid_name));
+            focusView = nameView;
+        }
+
         if (!Patterns.EMAIL_ADDRESS.matcher(eml).matches()) {
             preSubErr = true;
             emailView.setError(getString(R.string.error_invalid_email));
             focusView = emailView;
         }
 
-        // Check other fields once implemented
+        if (!Patterns.PHONE.matcher(phone).matches()) {
+            preSubErr = true;
+            phoneView.setError(getString(R.string.error_invalid_phone));
+            focusView = phoneView;
+        }
 
         if (preSubErr) {
             focusView.requestFocus();

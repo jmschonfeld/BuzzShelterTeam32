@@ -30,5 +30,6 @@
     <string name="registration_userType">I am…</string>
     <string name="error_password_requirements">Password must be at least 6 characters</string>
     <string name="error_email_already_registered">Email already registered</string>
-
+    <string name="error_invalid_phone">This phone number is invalid</string>
+    <string name="error_invalid_name">Please enter your first and last name</string>
 </resources>
