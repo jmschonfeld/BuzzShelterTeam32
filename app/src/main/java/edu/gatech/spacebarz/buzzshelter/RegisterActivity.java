@@ -1,5 +1,6 @@
 package edu.gatech.spacebarz.buzzshelter;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -30,7 +31,7 @@ public class RegisterActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
 
-        //localize fields
+        //ui references
         nameView = findViewById(R.id.input_name);
         emailView = findViewById(R.id.input_email);
         passwordView = findViewById(R.id.input_password);
@@ -41,7 +42,7 @@ public class RegisterActivity extends AppCompatActivity {
         progressBar.setVisibility(View.INVISIBLE);
 
         //Spinner
-        ArrayAdapter<String> adapter = new ArrayAdapter(this, android.R.layout.simple_spinner_item, UserRole.values());
+        ArrayAdapter<UserRole> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, UserRole.values());
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         userTypeSpinner.setAdapter(adapter);
 
@@ -88,7 +89,8 @@ public class RegisterActivity extends AppCompatActivity {
         View v = this.getCurrentFocus();
         if (v != null) {
             InputMethodManager im = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-            im.hideSoftInputFromWindow(v.getWindowToken(), 0);
+            if (im != null)
+                im.hideSoftInputFromWindow(v.getWindowToken(), 0);
         }
     }
 
@@ -100,6 +102,7 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
 
+    @SuppressLint("StaticFieldLeak")
     public class UserRegistrationTask extends AsyncTask<Void, Void, Boolean> {
         private Exception exe;
         private boolean succ;
