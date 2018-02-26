@@ -36,7 +36,7 @@ public class RegisterActivity extends AppCompatActivity {
         passwordView = findViewById(R.id.input_password);
         phoneView = findViewById(R.id.input_phoneNumber);
         userTypeSpinner = findViewById(R.id.spinner_userType);
-        progressBar = findViewById(R.id.progressBar);
+        progressBar = findViewById(R.id.reg_progressBar);
 
         progressBar.setVisibility(View.INVISIBLE);
 

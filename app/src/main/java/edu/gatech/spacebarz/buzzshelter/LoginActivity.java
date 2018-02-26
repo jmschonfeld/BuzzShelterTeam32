@@ -18,6 +18,7 @@ import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -38,6 +39,7 @@ public class LoginActivity extends AppCompatActivity {
     private EditText mPasswordView;
     private View mProgressView;
     private View mLoginFormView;
+    private ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,6 +84,9 @@ public class LoginActivity extends AppCompatActivity {
 
         mLoginFormView = findViewById(R.id.login_form);
         mProgressView = findViewById(R.id.login_progress);
+        progressBar = findViewById(R.id.login_progressBar);
+
+        progressBar.setVisibility(View.INVISIBLE);
 
         if (FirebaseAuthManager.isLoggedIn()) {
             moveToMainActivity();
@@ -154,36 +159,10 @@ public class LoginActivity extends AppCompatActivity {
                 im.hideSoftInputFromWindow(v.getWindowToken(), 0);
             }
 
-            // Show a progress spinner, and kick off a background task to
-            // perform the user login attempt.
-            showProgress(true);
+//          BG login task
             mAuthTask = new UserLoginTask(email, password);
             mAuthTask.execute((Void) null);
         }
-    }
-
-    /**
-     * Shows the progress UI and hides the login form.
-     */
-    private void showProgress(final boolean show) {
-        int shortAnimTime = getResources().getInteger(android.R.integer.config_shortAnimTime);
-
-        mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
-        mLoginFormView.animate().setDuration(shortAnimTime).alpha(show ? 0 : 1).setListener(new AnimatorListenerAdapter() {
-            @Override
-            public void onAnimationEnd(Animator animation) {
-                mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
-            }
-        });
-
-
-        mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
-        mProgressView.animate().setDuration(shortAnimTime).alpha(show ? 1 : 0).setListener(new AnimatorListenerAdapter() {
-            @Override
-            public void onAnimationEnd(Animator animation) {
-                mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
-            }
-        });
     }
 
     /**
@@ -199,6 +178,7 @@ public class LoginActivity extends AppCompatActivity {
         UserLoginTask(String user, String password) {
             mUser = user;
             mPassword = password;
+            progressBar.setVisibility(View.VISIBLE);
         }
 
         @Override
@@ -226,9 +206,9 @@ public class LoginActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(final Boolean success) {
+            progressBar.setVisibility(View.INVISIBLE);
             loggingIn = false;
             mAuthTask = null;
-            showProgress(false);
 
             if (success) {
                 moveToMainActivity();
@@ -244,9 +224,9 @@ public class LoginActivity extends AppCompatActivity {
 
         @Override
         protected void onCancelled() {
+            progressBar.setVisibility(View.INVISIBLE);
             loggingIn = false;
             mAuthTask = null;
-            showProgress(false);
             mPasswordView.setText("");
             mPasswordView.requestFocus();
 
