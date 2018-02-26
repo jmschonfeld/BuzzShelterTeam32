@@ -20,6 +20,13 @@ public class FirebaseDBManager {
         return task.getValue();
     }
 
+    public static UserInfo retrieveCurrentUserInfo() {
+        if (!FirebaseAuthManager.isLoggedIn()) {
+            return null;
+        }
+        return retrieveUserInfo(FirebaseAuthManager.getCurrentUserUID());
+    }
+
     /*
     public static String insertNewUserInfo(UserInfo user) {
         FirebaseDatabase database = FirebaseDatabase.getInstance();
