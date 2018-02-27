@@ -23,7 +23,7 @@ public class Shelter {
     private Gender gender;
     private Age age;
     private String key;
-    private String phonNum;
+    private String phoneNum;
     private String specialNotes;
     private Location address;
 
@@ -89,12 +89,12 @@ public class Shelter {
         this.key = key;
     }
 
-    public String getPhonNum() {
-        return phonNum;
+    public String getPhoneNum() {
+        return phoneNum;
     }
 
     public void setPhonNum(String phonNum) {
-        this.phonNum = phonNum;
+        this.phoneNum = phonNum;
     }
 
     public String getSpecialNotes() {
