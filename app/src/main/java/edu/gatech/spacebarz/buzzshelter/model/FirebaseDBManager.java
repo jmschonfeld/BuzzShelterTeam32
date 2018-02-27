@@ -10,6 +10,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.Map;
 import java.util.concurrent.CountDownLatch;
 
 public class FirebaseDBManager {
@@ -36,6 +37,15 @@ public class FirebaseDBManager {
         if (ex != null) {
             throw ex;
         }
+    }
+
+    public static Shelter[] retrieveAllShelters() throws DatabaseException {
+        RetrieveObjectListSynchronousTask<Shelter> task = new RetrieveObjectListSynchronousTask<>(DatabaseKey.SHELTER, Shelter.class);
+        DatabaseException ex = task.run();
+        if (ex != null) {
+            throw ex;
+        }
+        return task.getValues();
     }
 
     public static Shelter retrieveShelterInfo(String uid) throws DatabaseException {
@@ -99,6 +109,58 @@ public class FirebaseDBManager {
             } else {
                 return error.toException();
             }
+        }
+
+    }
+
+    private static class RetrieveObjectListSynchronousTask<T> {
+
+        private String key;
+        private Class<T> type;
+        private T[] values;
+        private DatabaseError error;
+
+        private RetrieveObjectListSynchronousTask(DatabaseKey dbKey, Class<T> type) {
+            this.key = "/" + dbKey;
+            this.type = type;
+        }
+
+        private DatabaseException run() {
+            FirebaseDatabase database = FirebaseDatabase.getInstance();
+            DatabaseReference myRef = database.getReference(key);
+            final CountDownLatch latch = new CountDownLatch(1);
+            myRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    values = (T[]) new Object[(int)dataSnapshot.getChildrenCount()];
+                    int i = 0;
+                    for (DataSnapshot data : dataSnapshot.getChildren()) {
+                        values[i] = (T) data.getValue();
+                        i++;
+                    }
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+                    Log.e("Firebase(Database)", "An error occurred while retrieving an object from Firebase", databaseError.toException());
+                    error = databaseError;
+                    latch.countDown();
+                }
+            });
+            try {
+                latch.await();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            if (error == null) {
+                return null;
+            } else {
+                return error.toException();
+            }
+        }
+
+        private T[] getValues() {
+            return values;
         }
 
     }
