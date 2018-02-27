@@ -10,6 +10,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.lang.reflect.Array;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.CountDownLatch;
 
@@ -126,18 +128,21 @@ public class FirebaseDBManager {
         }
 
         private DatabaseException run() {
-            FirebaseDatabase database = FirebaseDatabase.getInstance();
+            final FirebaseDatabase database = FirebaseDatabase.getInstance();
             DatabaseReference myRef = database.getReference(key);
             final CountDownLatch latch = new CountDownLatch(1);
             myRef.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
-                    values = (T[]) new Object[(int)dataSnapshot.getChildrenCount()];
+                    Log.i("Num Children:", ""+ dataSnapshot.getChildrenCount());
+                    values = (T[]) Array.newInstance(type, (int)dataSnapshot.getChildrenCount());
                     int i = 0;
                     for (DataSnapshot data : dataSnapshot.getChildren()) {
-                        values[i] = (T) data.getValue();
+                        Log.i("Map: ", data.getValue().toString());
+                        values[i] = data.getValue(type);
                         i++;
                     }
+                    latch.countDown();
                 }
 
                 @Override

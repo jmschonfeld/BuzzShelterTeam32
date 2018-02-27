@@ -32,4 +32,7 @@
     <string name="error_email_already_registered">Email already registered</string>
     <string name="error_invalid_phone">This phone number is invalid</string>
     <string name="error_invalid_name">Please enter your first and last name</string>
+
+    <!-- Shelter List Strings -->
+    <string name="title_activity_shelter_list">Shelters</string>
 </resources>

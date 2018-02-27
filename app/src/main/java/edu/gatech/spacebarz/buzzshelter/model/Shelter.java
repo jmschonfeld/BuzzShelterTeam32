@@ -2,10 +2,13 @@ package edu.gatech.spacebarz.buzzshelter.model;
 
 import android.location.Location;
 
+import com.google.firebase.database.IgnoreExtraProperties;
+
 /**
  * Created by mayaholikatti on 2/19/18.
  */
 
+@IgnoreExtraProperties
 public class Shelter {
 
     public enum Age {
@@ -25,7 +28,6 @@ public class Shelter {
     private String key;
     private String phoneNum;
     private String specialNotes;
-    private Location address;
 
     /** Required for use with Firebase, should not be used by the actual app */
     public Shelter() {
@@ -103,13 +105,5 @@ public class Shelter {
 
     public void setSpecialNotes(String specialNotes) {
         this.specialNotes = specialNotes;
-    }
-
-    public Location getAddress() {
-        return address;
-    }
-
-    public void setAddress(Location address) {
-        this.address = address;
     }
 }
