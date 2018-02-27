@@ -8,24 +8,29 @@ import android.location.Location;
 
 public class Shelter {
 
-    private int capacity;
-    private String shelterName;
-    private boolean hasFamily;
-    private boolean isVet;
-    public enum Gender {
-        MALE, FEMALE;
-    }
-
-    private Gender gender;
     public enum Age {
         FamiliesWithNewborns, Children, YoungAdult, Anyone;
     }
 
+    public enum Gender {
+        MALE, FEMALE;
+    }
+
+    private int capacity;
+    private String shelterName;
+    private boolean hasFamily;
+    private boolean isVet;
+    private Gender gender;
     private Age age;
     private String key;
-    private String phonNum;
+    private String phoneNum;
     private String specialNotes;
     private Location address;
+
+    /** Required for use with Firebase, should not be used by the actual app */
+    public Shelter() {
+
+    }
 
 
     public int getCapacity() {
@@ -84,12 +89,12 @@ public class Shelter {
         this.key = key;
     }
 
-    public String getPhonNum() {
-        return phonNum;
+    public String getPhoneNum() {
+        return phoneNum;
     }
 
     public void setPhonNum(String phonNum) {
-        this.phonNum = phonNum;
+        this.phoneNum = phonNum;
     }
 
     public String getSpecialNotes() {
