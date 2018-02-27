@@ -1,63 +1,53 @@
 package edu.gatech.spacebarz.buzzshelter;
 
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
-
 import android.os.AsyncTask;
-
 import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
+import android.util.Patterns;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import edu.gatech.spacebarz.buzzshelter.model.FirebaseManager;
-import edu.gatech.spacebarz.buzzshelter.model.LocalUser;
+import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 
-/**
- * A login screen that offers login via username/password.
- */
+import java.util.concurrent.CountDownLatch;
+
+import edu.gatech.spacebarz.buzzshelter.model.FirebaseAuthManager;
+
 public class LoginActivity extends AppCompatActivity {
-
-    private static final String[] INTERNAL_CREDENTIALS = new String[]{
-            "user:pass"
-    };
-
-    /**
-     * Keep track of the login task to ensure we can cancel it if requested.
-     */
     private UserLoginTask mAuthTask = null;
 
     // UI references.
-    private AutoCompleteTextView loginView;
+    private EditText loginView;
     private EditText mPasswordView;
-    private View mProgressView;
-    private View mLoginFormView;
+    private ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        FirebaseManager.initialize();
+        FirebaseAuthManager.initialize();
 
         loggingIn = false;
 
         // Set up the login form.
-        loginView = (AutoCompleteTextView) findViewById(R.id.username);
+        loginView = findViewById(R.id.email);
 
-        mPasswordView = (EditText) findViewById(R.id.password);
+        mPasswordView = findViewById(R.id.password);
         mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
@@ -69,35 +59,42 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
-        Button SignInButton = (Button) findViewById(R.id.sign_in_button);
-        SignInButton.setOnClickListener(new OnClickListener() {
+        Button signInButton = findViewById(R.id.sign_in_button);
+        signInButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
                 attemptLogin();
             }
         });
 
-        Button registerButton = (Button) findViewById(R.id.signin_register_button);
+        Button registerButton = findViewById(R.id.signin_register_button);
         registerButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(getApplicationContext(), R.string.toast_to_be_implemented, Toast.LENGTH_SHORT).show();
+                clearFields();
+                moveToRegisterActivity();
             }
         });
 
-        mLoginFormView = findViewById(R.id.login_form);
-        mProgressView = findViewById(R.id.login_progress);
+        progressBar = findViewById(R.id.login_progressBar);
 
-        if (LocalUser.getInstance(this).isLoggedIn()) {
+        progressBar.setVisibility(View.INVISIBLE);
+
+        if (FirebaseAuthManager.isLoggedIn()) {
             moveToMainActivity();
         }
+    }
+
+    private void moveToRegisterActivity(){
+        Intent intent = new Intent(this, RegisterActivity.class);
+        startActivity(intent);
     }
 
     private void moveToMainActivity() {
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
-        mPasswordView.setText("");
-        mPasswordView.requestFocus();
+        clearFields();
+        loginView.requestFocus();
     }
 
     /**
@@ -115,8 +112,8 @@ public class LoginActivity extends AppCompatActivity {
         mPasswordView.setError(null);
 
         // Store values at the time of the login attempt.
-        String password = mPasswordView.getText().toString();
-        String username = loginView.getText().toString();
+        String password = mPasswordView.getText().toString().trim();
+        String email = loginView.getText().toString().trim();
 
         boolean cancel = false;
         View focusView = null;
@@ -128,9 +125,16 @@ public class LoginActivity extends AppCompatActivity {
             cancel = true;
         }
 
-        // Check for a valid [username].
-        if (TextUtils.isEmpty(username)) {
+        // Check for a empty email
+        if (TextUtils.isEmpty(email)) {
             loginView.setError(getString(R.string.error_field_required));
+            focusView = loginView;
+            cancel = true;
+        }
+
+        // Check for valid email format
+        if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+            loginView.setError(getString(R.string.error_invalid_email));
             focusView = loginView;
             cancel = true;
         }
@@ -144,99 +148,80 @@ public class LoginActivity extends AppCompatActivity {
             View v = this.getCurrentFocus();
             if (v != null) {
                 InputMethodManager im = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                im.hideSoftInputFromWindow(v.getWindowToken(), 0);
+                if (im != null)
+                    im.hideSoftInputFromWindow(v.getWindowToken(), 0);
             }
 
-            // Show a progress spinner, and kick off a background task to
-            // perform the user login attempt.
-            showProgress(true);
-            mAuthTask = new UserLoginTask(username, password);
+//          BG login task
+            mAuthTask = new UserLoginTask(email, password);
             mAuthTask.execute((Void) null);
         }
-    }
-
-    /**
-     * Shows the progress UI and hides the login form.
-     */
-    private void showProgress(final boolean show) {
-        int shortAnimTime = getResources().getInteger(android.R.integer.config_shortAnimTime);
-
-        mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
-        mLoginFormView.animate().setDuration(shortAnimTime).alpha(show ? 0 : 1).setListener(new AnimatorListenerAdapter() {
-            @Override
-            public void onAnimationEnd(Animator animation) {
-                mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
-            }
-        });
-
-
-        mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
-        mProgressView.animate().setDuration(shortAnimTime).alpha(show ? 1 : 0).setListener(new AnimatorListenerAdapter() {
-            @Override
-            public void onAnimationEnd(Animator animation) {
-                mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
-            }
-        });
     }
 
     /**
      * Represents an asynchronous login/registration task used to authenticate
      * the user.
      */
+    @SuppressLint("StaticFieldLeak")
     public class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
         private final String mUser;
         private final String mPassword;
-        private final boolean loginCanceled;
+        private Exception exe;
+        private boolean succ;
 
         UserLoginTask(String user, String password) {
-            loginCanceled = false;
             mUser = user;
             mPassword = password;
+            progressBar.setVisibility(View.VISIBLE);
         }
 
         @Override
         protected Boolean doInBackground(Void... params) {
             loggingIn = true;
 
-            // TODO: attempt authentication against a network service.
+            final CountDownLatch latch = new CountDownLatch(1);
+            FirebaseAuthManager.signin(mUser, mPassword, new FirebaseAuthManager.FirebaseAuthCallback() {
+                @Override
+                public void callback(boolean success, @Nullable Exception exception) {
+                    succ = success;
+                    exe = exception;
+                    latch.countDown();
+                }
+            });
+
             try {
-                // Simulate network access.
-                Thread.sleep(2000);
+                latch.await();
             } catch (InterruptedException e) {
+                e.printStackTrace();
                 return false;
             }
 
-            for (String credential : INTERNAL_CREDENTIALS) {
-                String[] pieces = credential.split(":");
-                if (pieces[0].equals(mUser)) {
-                    // Account exists, return true if the password matches.
-                    return pieces[1].equals(mPassword);
-                }
-            }
-
-            return false;
+            return succ;
         }
 
         @Override
         protected void onPostExecute(final Boolean success) {
+            progressBar.setVisibility(View.INVISIBLE);
             loggingIn = false;
             mAuthTask = null;
-            showProgress(false);
 
             if (success) {
-                LocalUser.getInstance(getApplicationContext()).login(mUser);
                 moveToMainActivity();
             } else {
-                mPasswordView.setError(getString(R.string.error_incorrect_password));
-                mPasswordView.requestFocus();
+                if (exe instanceof FirebaseAuthInvalidCredentialsException) {
+                    mPasswordView.requestFocus();
+                    mPasswordView.setError("Invalid email or password");
+                } else {
+                    exe.printStackTrace();
+                }
             }
         }
 
         @Override
         protected void onCancelled() {
+            progressBar.setVisibility(View.INVISIBLE);
             loggingIn = false;
             mAuthTask = null;
-            showProgress(false);
             mPasswordView.setText("");
             mPasswordView.requestFocus();
 
@@ -244,6 +229,11 @@ public class LoginActivity extends AppCompatActivity {
             Log.i("Login", "Login canceled");
             cancel(true);
         }
+    }
+
+    private void clearFields() {
+        loginView.setText("");
+        mPasswordView.setText("");
     }
 
     @Override
@@ -258,4 +248,3 @@ public class LoginActivity extends AppCompatActivity {
 
     private boolean loggingIn;
 }
-

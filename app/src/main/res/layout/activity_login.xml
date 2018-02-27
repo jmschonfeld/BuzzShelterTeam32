@@ -34,12 +34,12 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-                <AutoCompleteTextView
-                    android:id="@+id/username"
+                <EditText
+                    android:id="@+id/email"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="@string/prompt_username"
-                    android:inputType="textNoSuggestions"
+                    android:hint="@string/prompt_email"
+                    android:inputType="textEmailAddress"
                     android:maxLines="1"
                     android:singleLine="true" />
 
@@ -70,6 +70,16 @@
                 android:orientation="horizontal">
 
                 <Button
+                    android:id="@+id/signin_register_button"
+                    style="?android:textAppearanceSmall"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:fontFamily="sans-serif"
+                    android:text="@string/action_register"
+                    android:textStyle="bold" />
+
+                <Button
                     android:id="@+id/sign_in_button"
                     style="?android:textAppearanceSmall"
                     android:layout_width="match_parent"
@@ -79,15 +89,18 @@
                     android:text="@string/action_sign_in"
                     android:textStyle="bold" />
 
-                <Button
-                    android:id="@+id/signin_register_button"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:fontFamily="sans-serif"
-                    android:text="@string/action_register" />
             </LinearLayout>
 
+            <ProgressBar
+                android:id="@+id/login_progressBar"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:indeterminate="true"
+                android:max="100"
+                android:backgroundTint="#fafafa"
+                android:indeterminateTint="#1a09d6"
+                android:layout_marginTop="8dp"/>
         </LinearLayout>
     </ScrollView>
 </LinearLayout>
