@@ -5,6 +5,7 @@ import android.util.Log;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseException;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.IgnoreExtraProperties;
@@ -14,9 +15,12 @@ import java.util.concurrent.CountDownLatch;
 
 public class FirebaseDBManager {
 
-    public static UserInfo retrieveUserInfo(String uid) {
+    public static UserInfo retrieveUserInfo(String uid) throws DatabaseException {
         RetrieveObjectSynchronousTask<UserInfo> task = new RetrieveObjectSynchronousTask<>(DatabaseKey.USER, uid, UserInfo.class);
-        task.run();
+        DatabaseException ex = task.run();
+        if (ex != null) {
+            throw ex;
+        }
         return task.getValue();
     }
 
@@ -37,10 +41,55 @@ public class FirebaseDBManager {
         return userKey.getKey();
     }*/
 
-    public static void setUserInfo(UserInfo updated) {
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference myRef = database.getReference("/" + DatabaseKey.USER + "/" + updated.getUid());
-        myRef.setValue(updated);
+    public static void setUserInfo(UserInfo updated) throws DatabaseException {
+        StoreObjectSynchronousTask<UserInfo> task = new StoreObjectSynchronousTask<>(DatabaseKey.USER, updated.getUid(), UserInfo.class);
+        DatabaseException ex = task.run(updated);
+        if (ex != null) {
+            throw ex;
+        }
+    }
+
+    private static class StoreObjectSynchronousTask<T> {
+
+        private String key;
+        private Class<T> type;
+        private T value;
+        private DatabaseError error;
+
+        private StoreObjectSynchronousTask(DatabaseKey dbKey, String id, Class<T> type) {
+            this.key = "/" + dbKey + "/" + id;
+            this.type = type;
+        }
+
+        private DatabaseException run(T object) {
+            FirebaseDatabase database = FirebaseDatabase.getInstance();
+            DatabaseReference myRef = database.getReference(key);
+            final CountDownLatch latch = new CountDownLatch(1);
+            myRef.setValue(object, new DatabaseReference.CompletionListener() {
+                @Override
+                public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                    if (databaseError != null) {
+                        error = databaseError;
+                    }
+                    latch.countDown();
+                }
+            });
+            try {
+                latch.await();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            if (error == null) {
+                return null;
+            } else {
+                return error.toException();
+            }
+        }
+
+        private T getValue() {
+            return value;
+        }
+
     }
 
     private static class RetrieveObjectSynchronousTask<T> {
@@ -48,13 +97,14 @@ public class FirebaseDBManager {
         private String key;
         private Class<T> type;
         private T value;
+        private DatabaseError error;
 
         private RetrieveObjectSynchronousTask(DatabaseKey dbKey, String id, Class<T> type) {
             this.key = "/" + dbKey + "/" + id;
             this.type = type;
         }
 
-        private void run() {
+        private DatabaseException run() {
             FirebaseDatabase database = FirebaseDatabase.getInstance();
             DatabaseReference myRef = database.getReference(key);
             final CountDownLatch latch = new CountDownLatch(1);
@@ -68,6 +118,7 @@ public class FirebaseDBManager {
                 @Override
                 public void onCancelled(DatabaseError databaseError) {
                     Log.e("Firebase(Database)", "An error occurred while retrieving an object from Firebase", databaseError.toException());
+                    error = databaseError;
                     latch.countDown();
                 }
             });
@@ -75,6 +126,11 @@ public class FirebaseDBManager {
                 latch.await();
             } catch (InterruptedException e) {
                 e.printStackTrace();
+            }
+            if (error == null) {
+                return null;
+            } else {
+                return error.toException();
             }
         }
 
