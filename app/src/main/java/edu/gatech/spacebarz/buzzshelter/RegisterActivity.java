@@ -25,6 +25,8 @@ import java.util.regex.Pattern;
 
 import edu.gatech.spacebarz.buzzshelter.model.FirebaseAuthManager;
 import edu.gatech.spacebarz.buzzshelter.model.FirebaseDBManager;
+import edu.gatech.spacebarz.buzzshelter.model.UserInfo;
+import edu.gatech.spacebarz.buzzshelter.model.UserInfo.UserRole;
 
 public class RegisterActivity extends AppCompatActivity {
 
@@ -44,7 +46,7 @@ public class RegisterActivity extends AppCompatActivity {
         progressBar.setVisibility(View.INVISIBLE);
 
         //Spinner
-        ArrayAdapter<FirebaseDBManager.UserRole> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, FirebaseDBManager.UserRole.values());
+        ArrayAdapter<UserRole> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, UserRole.values());
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         userTypeSpinner.setAdapter(adapter);
 
@@ -71,7 +73,7 @@ public class RegisterActivity extends AppCompatActivity {
         String pass = passwordView.getText().toString().trim();
         String name = nameView.getText().toString().trim();
         String phone = phoneView.getText().toString().trim();
-        FirebaseDBManager.UserRole role = FirebaseDBManager.UserRole.findUserRole(userTypeSpinner.getSelectedItem().toString());
+        UserRole role = UserRole.findUserRole(userTypeSpinner.getSelectedItem().toString());
 
         if (!Pattern.matches("\\A[A-Za-z]+\\s[A-Za-z]+\\z", name)) {
 //          Possibly implement better string handling
@@ -123,9 +125,9 @@ public class RegisterActivity extends AppCompatActivity {
         private Exception exe;
         private boolean succ;
         private final String email, password, name, phone;
-        private final FirebaseDBManager.UserRole role;
+        private final UserRole role;
 
-        UserRegistrationTask(String eml, String pass, String nm, String phn, FirebaseDBManager.UserRole rl) {
+        UserRegistrationTask(String eml, String pass, String nm, String phn, UserRole rl) {
             email = eml;
             password = pass;
             name = nm;
@@ -156,7 +158,7 @@ public class RegisterActivity extends AppCompatActivity {
                 return false;
             }
 
-            FirebaseDBManager.setUserInfo(new FirebaseDBManager.UserInfo(FirebaseAuthManager.getCurrentUserUID(), name, phone, role));
+            FirebaseDBManager.setUserInfo(new UserInfo(FirebaseAuthManager.getCurrentUserUID(), name, phone, role));
             Log.i("Registration", "Created new user registration with UID " + FirebaseAuthManager.getCurrentUserUID());
 
             return succ;
