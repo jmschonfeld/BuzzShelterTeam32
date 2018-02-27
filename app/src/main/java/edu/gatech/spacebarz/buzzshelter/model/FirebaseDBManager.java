@@ -30,34 +30,50 @@ public class FirebaseDBManager {
         return retrieveUserInfo(FirebaseAuthManager.getCurrentUserUID());
     }
 
-    /*
-    public static String insertNewUserInfo(UserInfo user) {
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference myRef = database.getReference("/" + DatabaseKey.USER);
-        DatabaseReference userKey = myRef.push();
-        user.uid = userKey.getKey();
-        userKey.setValue(user);
-        return userKey.getKey();
-    }*/
-
     public static void setUserInfo(UserInfo updated) throws DatabaseException {
-        StoreObjectSynchronousTask<UserInfo> task = new StoreObjectSynchronousTask<>(DatabaseKey.USER, updated.getUid(), UserInfo.class);
+        StoreObjectSynchronousTask<UserInfo> task = new StoreObjectSynchronousTask<>(DatabaseKey.USER, updated.getUid());
         DatabaseException ex = task.run(updated);
         if (ex != null) {
             throw ex;
         }
     }
 
+    public static Shelter retrieveShelterInfo(String uid) throws DatabaseException {
+        RetrieveObjectSynchronousTask<Shelter> task = new RetrieveObjectSynchronousTask<>(DatabaseKey.SHELTER, uid, Shelter.class);
+        DatabaseException ex = task.run();
+        if (ex != null) {
+            throw ex;
+        }
+        return task.getValue();
+    }
+
+    public static void updateShelterInfo(Shelter updated) throws DatabaseException {
+        StoreObjectSynchronousTask<Shelter> task = new StoreObjectSynchronousTask<>(DatabaseKey.SHELTER, updated.getKey());
+        DatabaseException ex = task.run(updated);
+        if (ex != null) {
+            throw ex;
+        }
+    }
+
+    public static void insertNewShelterInfo(Shelter shelter) throws DatabaseException {
+        String uid = generateUID(DatabaseKey.SHELTER);
+        shelter.setKey(uid);
+        updateShelterInfo(shelter);
+    }
+
+    private static String generateUID(DatabaseKey key) {
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference myRef = database.getReference(key.toString());
+        return myRef.push().getKey();
+    }
+
     private static class StoreObjectSynchronousTask<T> {
 
         private String key;
-        private Class<T> type;
-        private T value;
         private DatabaseError error;
 
-        private StoreObjectSynchronousTask(DatabaseKey dbKey, String id, Class<T> type) {
+        private StoreObjectSynchronousTask(DatabaseKey dbKey, String id) {
             this.key = "/" + dbKey + "/" + id;
-            this.type = type;
         }
 
         private DatabaseException run(T object) {
@@ -83,10 +99,6 @@ public class FirebaseDBManager {
             } else {
                 return error.toException();
             }
-        }
-
-        private T getValue() {
-            return value;
         }
 
     }

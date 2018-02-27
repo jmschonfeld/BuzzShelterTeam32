@@ -80,7 +80,7 @@ public class Shelter {
         return key;
     }
 
-    public void setKey(String key) {
+    void setKey(String key) {
         this.key = key;
     }
 
