@@ -50,32 +50,17 @@ public class ShelterListActivity extends AppCompatActivity {
         listView.setVisibility(View.INVISIBLE);
         progressBar.setVisibility(View.VISIBLE);
 
-        listAdapter = new ShelterListAdapter(this, new ArrayList<Shelter>());
+        listAdapter = new ShelterListAdapter(this);
         listView.setAdapter(listAdapter);
 
-        final Handler handler = new Handler();
-        new Thread() {
+        listAdapter.fetchAllRemoteData(new Runnable() {
             @Override
             public void run() {
-                fetchData(handler);
-            }
-        }.start();
-    }
-
-    private void fetchData(Handler uiHandler) {
-        Log.i("Firebase(Fetch)", "Fetching shelter data...");
-        final Shelter[] shelters = FirebaseDBManager.retrieveAllShelters();
-        Log.i("Firebase(Fetch)", "Finished fetch");
-        uiHandler.post(new Runnable() {
-            @Override
-            public void run() {
-                listAdapter.addAll(shelters);
-                listAdapter.notifyDataSetChanged();
                 progressBar.setVisibility(View.INVISIBLE);
                 listView.setVisibility(View.VISIBLE);
-                Log.i("Firebase(Fetch)", "Retrieved shelter data (" + shelters.length + " shelters)");
             }
         });
+
     }
 
 

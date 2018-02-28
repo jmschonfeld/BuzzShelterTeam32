@@ -1,6 +1,10 @@
 package edu.gatech.spacebarz.buzzshelter.model;
 
 import android.content.Context;
+import android.os.Handler;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,8 +21,53 @@ import edu.gatech.spacebarz.buzzshelter.R;
 
 public class ShelterListAdapter extends ArrayAdapter<Shelter> {
 
+    public interface FetchDataCallback {
+        /** Fetch remote shelters and return them (will be called from a non-main thread) */
+        Shelter[] fetch();
+    }
+
+    /** Creates an empty shelter list adapter (used to fetch remote data) */
+    public ShelterListAdapter(Context context) {
+        super(context, 0, new ArrayList<Shelter>());
+    }
+
+    /** Creates a list adapter for the given list of shelters */
     public ShelterListAdapter(Context context, ArrayList<Shelter> shelters) {
         super(context, 0, shelters);
+    }
+
+    /** Fetches remote shelters through the fetching callback and adds them to the adapter */
+    public void fetchRemoteData(@NonNull final FetchDataCallback fetchCaller, @Nullable final Runnable callback) {
+        Log.i("ShelterListAdapter", "Fetching all shelter data...");
+        final Handler uiHandler = new Handler();
+        new Thread() {
+            @Override
+            public void run() {
+                final Shelter[] shelters = fetchCaller.fetch();
+                Log.i("ShelterListAdapter", "Retrieved shelter data (" + shelters.length + " shelters)");
+                uiHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        clear();
+                        addAll(shelters);
+                        notifyDataSetChanged();
+                        if (callback != null) {
+                            callback.run();
+                        }
+                    }
+                });
+            }
+        }.start();
+    }
+
+    /** Fetches all shelters from Firebase and stores them within the list adapter */
+    public void fetchAllRemoteData(@Nullable final Runnable callback) {
+        this.fetchRemoteData(new FetchDataCallback() {
+            @Override
+            public Shelter[] fetch() {
+                return FirebaseDBManager.retrieveAllShelters();
+            }
+        }, callback);
     }
 
     @Override
