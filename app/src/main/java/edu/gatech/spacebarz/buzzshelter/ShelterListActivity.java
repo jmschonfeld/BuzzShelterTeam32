@@ -48,7 +48,6 @@ public class ShelterListActivity extends AppCompatActivity {
             public void run() {
                 listView.setVisibility(View.VISIBLE);
                 progressBar.setVisibility(View.GONE);
-                Log.i("ShelterListActivity", "Swapped visibilities");
             }
         });
 
