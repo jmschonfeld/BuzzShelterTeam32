@@ -58,7 +58,7 @@ public class FirebaseDBManager {
     }
 
     public static void updateShelterInfo(Shelter updated) throws DatabaseException {
-        StoreObjectSynchronousTask<Shelter> task = new StoreObjectSynchronousTask<>(DatabaseKey.SHELTER, updated.getKey());
+        StoreObjectSynchronousTask<Shelter> task = new StoreObjectSynchronousTask<>(DatabaseKey.SHELTER, updated.getUID());
         DatabaseException ex = task.run(updated);
         if (ex != null) {
             throw ex;
@@ -66,8 +66,6 @@ public class FirebaseDBManager {
     }
 
     public static void insertNewShelterInfo(Shelter shelter) throws DatabaseException {
-        String uid = generateUID(DatabaseKey.SHELTER);
-        shelter.setKey(uid);
         updateShelterInfo(shelter);
     }
 
@@ -114,7 +112,6 @@ public class FirebaseDBManager {
     }
 
     private static class RetrieveObjectListSynchronousTask<T> {
-
         private String key;
         private Class<T> type;
         private T[] values;
@@ -163,7 +160,6 @@ public class FirebaseDBManager {
         private T[] getValues() {
             return values;
         }
-
     }
 
     private static class RetrieveObjectSynchronousTask<T> {

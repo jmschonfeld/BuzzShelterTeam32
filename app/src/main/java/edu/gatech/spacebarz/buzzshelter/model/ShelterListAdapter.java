@@ -74,8 +74,8 @@ public class ShelterListAdapter extends ArrayAdapter<Shelter> {
         }
 
         if (shelter != null) {
-            ((TextView) convertView.findViewById(android.R.id.text1)).setText(shelter.getShelterName());
-            ((TextView) convertView.findViewById(android.R.id.text2)).setText(shelter.getPhoneNum());
+            ((TextView) convertView.findViewById(android.R.id.text1)).setText(shelter.getName());
+            ((TextView) convertView.findViewById(android.R.id.text2)).setText(shelter.getPhone());
         } else {
             Log.e("ShelterListAdapter", "Tried to load data for shelter at index " + position + " which does not exist");
         }
@@ -83,5 +83,4 @@ public class ShelterListAdapter extends ArrayAdapter<Shelter> {
         // Return the completed view to render on screen
         return convertView;
     }
-
 }

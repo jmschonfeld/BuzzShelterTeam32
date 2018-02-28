@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
 import android.widget.ListView;
 import android.widget.ProgressBar;
@@ -22,10 +21,10 @@ public class ShelterListActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_shelter_list);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -34,8 +33,8 @@ public class ShelterListActivity extends AppCompatActivity {
             }
         });
 
-        listView = (ListView) findViewById(R.id.shelters_list_view);
-        progressBar = (ProgressBar) findViewById(R.id.shelters_loading_pbar);
+        listView = findViewById(R.id.shelters_list_view);
+        progressBar = findViewById(R.id.shelters_loading_pbar);
 
         listView.setVisibility(View.GONE);
         progressBar.setVisibility(View.VISIBLE);
@@ -48,6 +47,7 @@ public class ShelterListActivity extends AppCompatActivity {
             public void run() {
                 listView.setVisibility(View.VISIBLE);
                 progressBar.setVisibility(View.GONE);
+
             }
         });
 
