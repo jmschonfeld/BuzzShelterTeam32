@@ -13,12 +13,6 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
-import edu.gatech.spacebarz.buzzshelter.R;
-
-/**
- * Created by jmschonfeld on 2/27/18.
- */
-
 public class ShelterListAdapter extends ArrayAdapter<Shelter> {
 
     public interface FetchDataCallback {
@@ -38,7 +32,7 @@ public class ShelterListAdapter extends ArrayAdapter<Shelter> {
 
     /** Fetches remote shelters through the fetching callback and adds them to the adapter */
     public void fetchRemoteData(@NonNull final FetchDataCallback fetchCaller, @Nullable final Runnable callback) {
-        Log.i("ShelterListAdapter", "Fetching all shelter data...");
+        Log.i("ShelterListAdapter", "Fetching shelter data...");
         final Handler uiHandler = new Handler();
         new Thread() {
             @Override

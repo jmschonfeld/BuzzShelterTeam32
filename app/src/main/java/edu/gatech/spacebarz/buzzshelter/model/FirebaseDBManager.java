@@ -11,8 +11,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.lang.reflect.Array;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.concurrent.CountDownLatch;
 
 public class FirebaseDBManager {
@@ -132,13 +130,11 @@ public class FirebaseDBManager {
             DatabaseReference myRef = database.getReference(key);
             final CountDownLatch latch = new CountDownLatch(1);
             myRef.addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
+                @Override @SuppressWarnings("unchecked")
                 public void onDataChange(DataSnapshot dataSnapshot) {
-                    Log.i("Num Children:", ""+ dataSnapshot.getChildrenCount());
                     values = (T[]) Array.newInstance(type, (int)dataSnapshot.getChildrenCount());
                     int i = 0;
                     for (DataSnapshot data : dataSnapshot.getChildren()) {
-                        Log.i("Map: ", data.getValue().toString());
                         values[i] = data.getValue(type);
                         i++;
                     }

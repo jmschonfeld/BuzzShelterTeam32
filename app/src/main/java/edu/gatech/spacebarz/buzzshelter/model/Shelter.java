@@ -16,7 +16,7 @@ public class Shelter {
     }
 
     public enum Gender {
-        MALE, FEMALE;
+        MALE, FEMALE, ALL;
     }
 
     private int capacity;
