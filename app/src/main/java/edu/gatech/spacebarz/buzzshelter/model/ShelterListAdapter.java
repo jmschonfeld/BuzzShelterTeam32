@@ -28,12 +28,12 @@ public class ShelterListAdapter extends ArrayAdapter<Shelter> {
 
     /** Creates an empty shelter list adapter (used to fetch remote data) */
     public ShelterListAdapter(Context context) {
-        super(context, 0, new ArrayList<Shelter>());
+        super(context, android.R.layout.simple_list_item_2, new ArrayList<Shelter>());
     }
 
     /** Creates a list adapter for the given list of shelters */
     public ShelterListAdapter(Context context, ArrayList<Shelter> shelters) {
-        super(context, 0, shelters);
+        super(context, android.R.layout.simple_list_item_2, shelters);
     }
 
     /** Fetches remote shelters through the fetching callback and adds them to the adapter */
@@ -76,11 +76,15 @@ public class ShelterListAdapter extends ArrayAdapter<Shelter> {
         Shelter shelter = getItem(position);
         // Check if an existing view is being reused, otherwise inflate the view
         if (convertView == null) {
-            convertView = LayoutInflater.from(getContext()).inflate(R.layout.item_shelter, parent, false);
+            convertView = LayoutInflater.from(getContext()).inflate(android.R.layout.simple_list_item_2, parent, false);
         }
 
-        ((TextView) convertView.findViewById(R.id.item_shelter_name)).setText(shelter.getShelterName());
-        ((TextView) convertView.findViewById(R.id.item_shelter_detail)).setText(shelter.getPhoneNum());
+        if (shelter != null) {
+            ((TextView) convertView.findViewById(android.R.id.text1)).setText(shelter.getShelterName());
+            ((TextView) convertView.findViewById(android.R.id.text2)).setText(shelter.getPhoneNum());
+        } else {
+            Log.e("ShelterListAdapter", "Tried to load data for shelter at index " + position + " which does not exist");
+        }
 
         // Return the completed view to render on screen
         return convertView;
