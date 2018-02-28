@@ -10,7 +10,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import java.util.Map;
+import java.lang.reflect.Array;
 import java.util.concurrent.CountDownLatch;
 
 public class FirebaseDBManager {
@@ -58,7 +58,7 @@ public class FirebaseDBManager {
     }
 
     public static void updateShelterInfo(Shelter updated) throws DatabaseException {
-        StoreObjectSynchronousTask<Shelter> task = new StoreObjectSynchronousTask<>(DatabaseKey.SHELTER, updated.getKey());
+        StoreObjectSynchronousTask<Shelter> task = new StoreObjectSynchronousTask<>(DatabaseKey.SHELTER, updated.getUID());
         DatabaseException ex = task.run(updated);
         if (ex != null) {
             throw ex;
@@ -66,8 +66,6 @@ public class FirebaseDBManager {
     }
 
     public static void insertNewShelterInfo(Shelter shelter) throws DatabaseException {
-        String uid = generateUID(DatabaseKey.SHELTER);
-        shelter.setKey(uid);
         updateShelterInfo(shelter);
     }
 
@@ -114,7 +112,6 @@ public class FirebaseDBManager {
     }
 
     private static class RetrieveObjectListSynchronousTask<T> {
-
         private String key;
         private Class<T> type;
         private T[] values;
@@ -126,18 +123,19 @@ public class FirebaseDBManager {
         }
 
         private DatabaseException run() {
-            FirebaseDatabase database = FirebaseDatabase.getInstance();
+            final FirebaseDatabase database = FirebaseDatabase.getInstance();
             DatabaseReference myRef = database.getReference(key);
             final CountDownLatch latch = new CountDownLatch(1);
             myRef.addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
+                @Override @SuppressWarnings("unchecked")
                 public void onDataChange(DataSnapshot dataSnapshot) {
-                    values = (T[]) new Object[(int)dataSnapshot.getChildrenCount()];
+                    values = (T[]) Array.newInstance(type, (int)dataSnapshot.getChildrenCount());
                     int i = 0;
                     for (DataSnapshot data : dataSnapshot.getChildren()) {
-                        values[i] = (T) data.getValue();
+                        values[i] = data.getValue(type);
                         i++;
                     }
+                    latch.countDown();
                 }
 
                 @Override
@@ -162,7 +160,6 @@ public class FirebaseDBManager {
         private T[] getValues() {
             return values;
         }
-
     }
 
     private static class RetrieveObjectSynchronousTask<T> {

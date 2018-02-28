@@ -1,115 +1,117 @@
 package edu.gatech.spacebarz.buzzshelter.model;
 
-import android.location.Location;
-
-/**
- * Created by mayaholikatti on 2/19/18.
- */
-
 public class Shelter {
+    public Shelter() {}
 
-    public enum Age {
-        FamiliesWithNewborns, Children, YoungAdult, Anyone;
+    public Shelter(String id, String n, String capS, String res, String addr, String note, String ph, int capN, double lat, double lon, Gender gen, boolean vet) {
+        uid = id;
+        name = n;
+        capacityStr = capS;
+        restrictions = res;
+        address = addr;
+        notes = note;
+        phone = ph;
+        capacityNum = capN;
+        this.lat = lat;
+        this.lon = lon;
+        gender = gen;
+        veteran = vet;
     }
 
-    public enum Gender {
-        MALE, FEMALE;
+    public boolean equals(Object o) {
+        if (o.getClass() != Shelter.class)
+            return false;
+
+        Shelter temp = (Shelter) o;
+
+        return temp.getUID().equals(uid) && temp.getName().equals(name) && temp.getCapacityStr().equals(capacityStr) &&
+                temp.getRestrictions().equals(restrictions) && temp.getAddress().equals(address) && temp.getNotes().equals(notes) &&
+                temp.getPhone().equals(phone) && temp.getCapacityNum() == capacityNum && temp.getLat() == lat &&
+                temp.getLon() == lon && temp.getGender().equals(gender) && temp.getVeteran() == veteran;
     }
 
-    private int capacity;
-    private String shelterName;
-    private boolean hasFamily;
-    private boolean isVet;
-    private Gender gender;
-    private Age age;
-    private String key;
-    private String phoneNum;
-    private String specialNotes;
-    private Location address;
-
-    /** Required for use with Firebase, should not be used by the actual app */
-    public Shelter() {
-
+    public String getUID() {
+        return uid;
     }
-
-
-    public int getCapacity() {
-        return capacity;
+    public void setUID(String uid) {
+        this.uid = uid;
     }
-
-    public void setCapacity(int capacity) {
-        this.capacity = capacity;
+    public String getName() {
+        return name;
     }
-
-    public String getShelterName() {
-        return shelterName;
+    public void setName(String name) {
+        this.name = name;
     }
-
-    public void setShelterName(String shelterName) {
-        this.shelterName = shelterName;
+    public String getCapacityStr() {
+        return capacityStr;
     }
-
-    public boolean isHasFamily() {
-        return hasFamily;
+    public void setCapacityStr(String capacityStr) {
+        this.capacityStr = capacityStr;
     }
-
-    public void setHasFamily(boolean hasFamily) {
-        this.hasFamily = hasFamily;
+    public String getRestrictions() {
+        return restrictions;
     }
-
-    public boolean isVet() {
-        return isVet;
+    public void setRestrictions(String restrictions) {
+        this.restrictions = restrictions;
     }
-
-    public void setVet(boolean vet) {
-        isVet = vet;
+    public String getAddress() {
+        return address;
     }
-
+    public void setAddress(String address) {
+        this.address = address;
+    }
+    public String getNotes() {
+        return notes;
+    }
+    public void setNotes(String notes) {
+        this.notes = notes;
+    }
+    public String getPhone() {
+        return phone;
+    }
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+    public int getCapacityNum() {
+        return capacityNum;
+    }
+    public void setCapacityNum(int capacityNum) {
+        this.capacityNum = capacityNum;
+    }
+    public double getLat() {
+        return lat;
+    }
+    public void setLat(double lat) {
+        this.lat = lat;
+    }
+    public double getLon() {
+        return lon;
+    }
+    public void setLon(double lon) {
+        this.lon = lon;
+    }
     public Gender getGender() {
         return gender;
     }
-
     public void setGender(Gender gender) {
         this.gender = gender;
     }
-
-    public Age getAge() {
-        return age;
+    public boolean getVeteran() {
+        return veteran;
+    }
+    public void setVeteran(boolean veteran) {
+        this.veteran = veteran;
     }
 
-    public void setAge(Age age) {
-        this.age = age;
+
+    public enum Gender {
+        MALE, FEMALE, ALL;
     }
 
-    public String getKey() {
-        return key;
-    }
-
-    void setKey(String key) {
-        this.key = key;
-    }
-
-    public String getPhoneNum() {
-        return phoneNum;
-    }
-
-    public void setPhonNum(String phonNum) {
-        this.phoneNum = phonNum;
-    }
-
-    public String getSpecialNotes() {
-        return specialNotes;
-    }
-
-    public void setSpecialNotes(String specialNotes) {
-        this.specialNotes = specialNotes;
-    }
-
-    public Location getAddress() {
-        return address;
-    }
-
-    public void setAddress(Location address) {
-        this.address = address;
-    }
+    private String uid, name, capacityStr, restrictions, address, notes, phone;
+    private int capacityNum;
+    private double lat, lon;
+    private Gender gender;
+    private boolean veteran;
 }
+

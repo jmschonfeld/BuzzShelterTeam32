@@ -91,7 +91,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void moveToMainActivity() {
-        Intent intent = new Intent(this, MainActivity.class);
+        Intent intent = new Intent(this, ShelterListActivity.class);
         startActivity(intent);
         clearFields();
         loginView.requestFocus();
