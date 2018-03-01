@@ -55,6 +55,8 @@ public class ShelterListActivity extends AppCompatActivity {
         listAdapter = new ShelterListAdapter(this);
         listView.setAdapter(listAdapter);
 
+        listView.setNestedScrollingEnabled(true);
+
         listAdapter.fetchAllRemoteData(new Runnable() {
             @Override
             public void run() {
