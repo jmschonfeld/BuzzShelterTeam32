@@ -2,13 +2,17 @@ package edu.gatech.spacebarz.buzzshelter;
 
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Handler;
+import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import edu.gatech.spacebarz.buzzshelter.model.FirebaseDBManager;
 import edu.gatech.spacebarz.buzzshelter.model.Shelter;
 
 public class ShelterDetailActivity extends AppCompatActivity {
@@ -21,7 +25,34 @@ public class ShelterDetailActivity extends AppCompatActivity {
         setContentView(R.layout.activity_shelter_detail);
 
         shelter = (Shelter) getIntent().getSerializableExtra("shelter");
+        final String shelterUID = getIntent().getStringExtra("shelterUID");
+        final ConstraintLayout loadingLayout = findViewById(R.id.shelter_detail_loading_layout);
+        final LinearLayout mainLayout = findViewById(R.id.shelter_detail_main_layout);
 
+        if (shelter != null) {
+            loadingLayout.setVisibility(View.GONE);
+            this.setupViewWith(shelter);
+        } else {
+            mainLayout.setVisibility(View.GONE);
+            final Handler uiHandler = new Handler();
+            new Thread() {
+                @Override
+                public void run() {
+                    shelter = FirebaseDBManager.retrieveShelterInfo(shelterUID);
+                    uiHandler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            mainLayout.setVisibility(View.VISIBLE);
+                            setupViewWith(shelter);
+                            loadingLayout.setVisibility(View.GONE);
+                        }
+                    });
+                }
+            }.start();
+        }
+    }
+
+    private void setupViewWith(final Shelter shelter) {
         TextView nameView = findViewById(R.id.shelter_detail_name);
         TextView addrView = findViewById(R.id.shelter_detail_address);
         TextView phoneView = findViewById(R.id.shelter_detail_phone);
