@@ -37,6 +37,7 @@
     <string name="title_activity_shelter_list">Shelters</string>
 
     <!-- Shelter Detail Strings -->
+    <string name="title_activity_shelter_detail">Shelter Details</string>
     <string name="shelter_capacity">Capacity: %1$s</string>
     <string name="shelter_gender">Gender: %1$s</string>
     <string name="shelter_restrictions">Restrictions: %1$s</string>
