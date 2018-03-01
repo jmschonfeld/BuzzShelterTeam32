@@ -1,6 +1,11 @@
 package edu.gatech.spacebarz.buzzshelter.model;
 
+import com.google.firebase.database.IgnoreExtraProperties;
+
+@IgnoreExtraProperties
 public class Shelter {
+
+    /** Required for firebase, should not be used by the actual app */
     public Shelter() {}
 
     public Shelter(String id, String n, String capS, String res, String addr, String note, String ph, int capN, double lat, double lon, Gender gen, boolean vet) {
@@ -18,13 +23,18 @@ public class Shelter {
         veteran = vet;
     }
 
+    @Override
     public boolean equals(Object o) {
         if (o.getClass() != Shelter.class)
             return false;
 
         Shelter temp = (Shelter) o;
 
-        return temp.getUID().equals(uid) && temp.getName().equals(name) && temp.getCapacityStr().equals(capacityStr) &&
+        return temp.getUID().equals(uid);
+    }
+
+    public boolean isIdentical(Shelter temp) {
+        return this.equals(temp) && temp.getName().equals(name) && temp.getCapacityStr().equals(capacityStr) &&
                 temp.getRestrictions().equals(restrictions) && temp.getAddress().equals(address) && temp.getNotes().equals(notes) &&
                 temp.getPhone().equals(phone) && temp.getCapacityNum() == capacityNum && temp.getLat() == lat &&
                 temp.getLon() == lon && temp.getGender().equals(gender) && temp.getVeteran() == veteran;

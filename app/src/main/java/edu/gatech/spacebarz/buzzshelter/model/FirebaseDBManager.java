@@ -66,6 +66,9 @@ public class FirebaseDBManager {
     }
 
     public static void insertNewShelterInfo(Shelter shelter) throws DatabaseException {
+        // TODO: ask TA to determine if the CSV UID scheme needs to remain
+        String uid = generateUID(DatabaseKey.SHELTER);
+        shelter.setUID(uid);
         updateShelterInfo(shelter);
     }
 
