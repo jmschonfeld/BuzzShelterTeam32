@@ -34,7 +34,9 @@
             android:name=".ShelterListActivity"
             android:label="@string/title_activity_shelter_list"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".ShelterDetailActivity"></activity>
+        <activity android:name=".ShelterDetailActivity"
+            android:label="@string/title_activity_shelter_detail"
+            android:parentActivityName=".ShelterListActivity"/>
     </application>
 
 </manifest>
