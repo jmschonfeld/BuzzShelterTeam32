@@ -2,8 +2,10 @@ package edu.gatech.spacebarz.buzzshelter.model;
 
 import com.google.firebase.database.IgnoreExtraProperties;
 
+import java.io.Serializable;
+
 @IgnoreExtraProperties
-public class Shelter {
+public class Shelter implements Serializable {
 
     /** Required for firebase, should not be used by the actual app */
     public Shelter() {}

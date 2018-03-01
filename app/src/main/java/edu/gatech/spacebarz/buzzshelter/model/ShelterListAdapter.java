@@ -1,6 +1,7 @@
 package edu.gatech.spacebarz.buzzshelter.model;
 
 import android.content.Context;
+import android.graphics.Typeface;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -74,8 +75,11 @@ public class ShelterListAdapter extends ArrayAdapter<Shelter> {
         }
 
         if (shelter != null) {
-            ((TextView) convertView.findViewById(android.R.id.text1)).setText(shelter.getName());
-            ((TextView) convertView.findViewById(android.R.id.text2)).setText(shelter.getPhone());
+            TextView mainText = convertView.findViewById(android.R.id.text1);
+            TextView subText = convertView.findViewById(android.R.id.text2);
+            mainText.setTypeface(Typeface.DEFAULT_BOLD);
+            mainText.setText(shelter.getName());
+            subText.setText(shelter.getAddress());
         } else {
             Log.e("ShelterListAdapter", "Tried to load data for shelter at index " + position + " which does not exist");
         }
