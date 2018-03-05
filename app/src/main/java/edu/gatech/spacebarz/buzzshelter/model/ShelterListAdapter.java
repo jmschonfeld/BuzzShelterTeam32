@@ -16,10 +16,18 @@ import java.util.ArrayList;
 
 public class ShelterListAdapter extends ArrayAdapter<Shelter> {
 
+    public interface ShelterFilter {
+        /** Returns whether or not the given shelter should be included */
+        boolean filter(Shelter shelter);
+    }
+
     public interface FetchDataCallback {
         /** Fetch remote shelters and return them (will be called from a non-main thread) */
         Shelter[] fetch();
     }
+
+    private ShelterFilter filter;
+    private Shelter[] fullData;
 
     /** Creates an empty shelter list adapter (used to fetch remote data) */
     public ShelterListAdapter(Context context) {
@@ -39,6 +47,8 @@ public class ShelterListAdapter extends ArrayAdapter<Shelter> {
             @Override
             public void run() {
                 final Shelter[] shelters = fetchCaller.fetch();
+                fullData = shelters;
+                filter = null;
                 Log.i("ShelterListAdapter", "Retrieved shelter data (" + shelters.length + " shelters)");
                 uiHandler.post(new Runnable() {
                     @Override
@@ -86,5 +96,20 @@ public class ShelterListAdapter extends ArrayAdapter<Shelter> {
 
         // Return the completed view to render on screen
         return convertView;
+    }
+
+    public void setFilter(@Nullable ShelterFilter filter) {
+        this.filter = filter;
+        clear();
+        if (this.filter == null) {
+            addAll(fullData);
+        } else {
+            for (Shelter shelter : fullData) {
+                if (this.filter.filter(shelter)) {
+                    add(shelter);
+                }
+            }
+        }
+        notifyDataSetChanged();
     }
 }
