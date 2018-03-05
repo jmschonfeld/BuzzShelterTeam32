@@ -10,7 +10,7 @@ public class Shelter implements Serializable {
     /** Required for firebase, should not be used by the actual app */
     public Shelter() {}
 
-    public Shelter(String id, String n, String capS, String res, String addr, String note, String ph, int capN, double lat, double lon, Gender gen, boolean vet) {
+    public Shelter(String id, String n, String capS, String res, String addr, String note, String ph, int capN, double lat, double lon, Gender gen, AgeRest age, boolean vet) {
         uid = id;
         name = n;
         capacityStr = capS;
@@ -22,6 +22,7 @@ public class Shelter implements Serializable {
         this.lat = lat;
         this.lon = lon;
         gender = gen;
+        age = ageRest;
         veteran = vet;
     }
 
@@ -108,6 +109,12 @@ public class Shelter implements Serializable {
     public void setGender(Gender gender) {
         this.gender = gender;
     }
+    public AgeRest getAgeRest() {
+        return ageRest;
+    }
+    public void setAgeRest(AgeRest ageRest) {
+        this.ageRest = ageRest;
+    }
     public boolean getVeteran() {
         return veteran;
     }
@@ -120,10 +127,15 @@ public class Shelter implements Serializable {
         MALE, FEMALE, ALL;
     }
 
+    public enum AgeRest {
+        FAMILIESWITHNEWBORNS, CHILDREN, YOUNGADULTS, ALL;
+    }
+
     private String uid, name, capacityStr, restrictions, address, notes, phone;
     private int capacityNum;
     private double lat, lon;
     private Gender gender;
+    private AgeRest ageRest;
     private boolean veteran;
 }
 
