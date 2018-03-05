@@ -40,11 +40,9 @@ public class ShelterListActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                FirebaseAuthManager.signout();
-                finish();
+                //TODO: Open filter screen
             }
         });
-        fab.setVisibility(View.GONE);
 
         listView = findViewById(R.id.shelters_list_view);
         progressBar = findViewById(R.id.shelters_loading_pbar);
