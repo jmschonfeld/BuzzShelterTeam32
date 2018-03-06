@@ -49,27 +49,27 @@
             android:id="@+id/shelter_image_childfriendly"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_child_friendly_black_24dp"/>
+            android:src="@drawable/ic_baby_buggy_grey600_24dp"/>
 
         <ImageView
             android:id="@+id/shelter_image_youngadult"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/human_child"/>
+            android:src="@drawable/ic_human_child_grey600_24dp"/>
         <ImageView
             android:id="@+id/shelter_image_female"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/human_female"/>
+            android:src="@drawable/ic_human_female_grey600_24dp"/>
         <ImageView
             android:id="@+id/shelter_image_male"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/human_male"/>
+            android:src="@drawable/ic_human_male_grey600_24dp"/>
         <ImageView
             android:id="@+id/shelter_image_allgender"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/human_male_female"/>
+            android:src="@drawable/ic_human_male_female_grey600_24dp"/>
     </LinearLayout>
 </TwoLineListItem>
