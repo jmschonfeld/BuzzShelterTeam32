@@ -3,7 +3,9 @@ package edu.gatech.spacebarz.buzzshelter;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.BaseTransientBottomBar;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
@@ -15,8 +17,11 @@ import android.widget.Toast;
 import edu.gatech.spacebarz.buzzshelter.model.FirebaseAuthManager;
 import edu.gatech.spacebarz.buzzshelter.model.Shelter;
 import edu.gatech.spacebarz.buzzshelter.model.ShelterListAdapter;
+import edu.gatech.spacebarz.buzzshelter.model.ShelterListAdapter.ShelterFilter;
 
 public class ShelterListActivity extends AppCompatActivity {
+
+    public static final int FILTER_LIST_REQUEST_CODE = 1001;
 
     private ListView listView;
     private ProgressBar progressBar;
@@ -27,6 +32,25 @@ public class ShelterListActivity extends AppCompatActivity {
         super.finish();
         FirebaseAuthManager.signout();
         Toast.makeText(getApplicationContext(), R.string.toast_logged_out, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == FILTER_LIST_REQUEST_CODE && resultCode == RESULT_OK) {
+            if (data.hasExtra("filter")) {
+                ShelterFilter filter = (ShelterFilter) data.getSerializableExtra("filter");
+                this.listAdapter.setFilter(filter);
+                final Snackbar snack = Snackbar.make(findViewById(android.R.id.content), "Filtered shelter list", Snackbar.LENGTH_INDEFINITE);
+                snack.setAction("View All Shelters", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        listAdapter.setFilter(null);
+                        snack.dismiss();
+                    }
+                });
+                snack.show();
+            }
+        }
     }
 
     @Override
@@ -41,6 +65,16 @@ public class ShelterListActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 //TODO: Open filter screen
+
+                // THIS IS TESTING CODE ONLY:
+                Intent intent = new Intent();
+                intent.putExtra("requestCode", FILTER_LIST_REQUEST_CODE);
+                intent.putExtra("filter", new ShelterFilter() {
+                    public boolean filter(Shelter s) {
+                        return s.getName().toLowerCase().contains("a");
+                    }
+                });
+                onActivityResult(FILTER_LIST_REQUEST_CODE, RESULT_OK, intent);
             }
         });
 
