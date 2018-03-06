@@ -12,13 +12,14 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 public class ShelterListAdapter extends ArrayAdapter<Shelter> {
 
-    public interface ShelterFilter {
+    public abstract static class ShelterFilter implements Serializable {
         /** Returns whether or not the given shelter should be included */
-        boolean filter(Shelter shelter);
+        public abstract boolean filter(Shelter shelter);
     }
 
     public interface FetchDataCallback {
