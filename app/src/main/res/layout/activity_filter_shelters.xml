@@ -32,7 +32,7 @@
         android:layout_height="wrap_content"
         android:text="@string/shelter_filter_gender_label" />
 
-    <LinearLayout
+    <RadioGroup
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
@@ -59,7 +59,7 @@
             android:checked="true"
             android:text="@string/shelter_filter_gender_all" />
 
-    </LinearLayout>
+    </RadioGroup>
 
     <Space
         android:layout_width="match_parent"
@@ -70,7 +70,7 @@
         android:layout_height="wrap_content"
         android:text="@string/shelter_filter_age_label" />
 
-    <LinearLayout
+    <RadioGroup
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
@@ -104,7 +104,7 @@
             android:layout_weight="1"
             android:text="@string/shelter_filter_age_youngadults" />
 
-    </LinearLayout>
+    </RadioGroup>
 
     <Space
         android:layout_width="match_parent"
