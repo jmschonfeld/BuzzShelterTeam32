@@ -10,10 +10,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+
+import edu.gatech.spacebarz.buzzshelter.R;
 
 public class ShelterListAdapter extends ArrayAdapter<Shelter> {
 
@@ -32,12 +35,12 @@ public class ShelterListAdapter extends ArrayAdapter<Shelter> {
 
     /** Creates an empty shelter list adapter (used to fetch remote data) */
     public ShelterListAdapter(Context context) {
-        super(context, android.R.layout.simple_list_item_2, new ArrayList<Shelter>());
+        this(context, new ArrayList<Shelter>());
     }
 
     /** Creates a list adapter for the given list of shelters */
     public ShelterListAdapter(Context context, ArrayList<Shelter> shelters) {
-        super(context, android.R.layout.simple_list_item_2, shelters);
+        super(context, R.layout.item_shelter_list, shelters);
     }
 
     /** Fetches remote shelters through the fetching callback and adds them to the adapter */
@@ -82,15 +85,42 @@ public class ShelterListAdapter extends ArrayAdapter<Shelter> {
         Shelter shelter = getItem(position);
         // Check if an existing view is being reused, otherwise inflate the view
         if (convertView == null) {
-            convertView = LayoutInflater.from(getContext()).inflate(android.R.layout.simple_list_item_2, parent, false);
+            convertView = LayoutInflater.from(getContext()).inflate(R.layout.item_shelter_list, parent, false);
         }
 
         if (shelter != null) {
-            TextView mainText = convertView.findViewById(android.R.id.text1);
-            TextView subText = convertView.findViewById(android.R.id.text2);
+            TextView mainText = convertView.findViewById(R.id.text1);
+            TextView subText = convertView.findViewById(R.id.text2);
+            ImageView newbornImage = convertView.findViewById(R.id.shelter_image_childfriendly);
+            ImageView childImage = convertView.findViewById(R.id.shelter_image_youngadult);
+            ImageView maleImage = convertView.findViewById(R.id.shelter_image_male);
+            ImageView femaleImage = convertView.findViewById(R.id.shelter_image_female);
+            ImageView allGenderImage = convertView.findViewById(R.id.shelter_image_allgender);
+
             mainText.setTypeface(Typeface.DEFAULT_BOLD);
             mainText.setText(shelter.getName());
             subText.setText(shelter.getAddress());
+
+            newbornImage.setVisibility(View.GONE);
+            childImage.setVisibility(View.GONE);
+            maleImage.setVisibility(View.GONE);
+            femaleImage.setVisibility(View.GONE);
+            allGenderImage.setVisibility(View.GONE);
+
+            switch (shelter.getGender()) {
+                case MALE:
+                    maleImage.setVisibility(View.VISIBLE); break;
+                case FEMALE:
+                    femaleImage.setVisibility(View.VISIBLE); break;
+            }
+
+            switch (shelter.getAgeRest()) {
+                case FAMILIESWITHNEWBORNS:
+                    newbornImage.setVisibility(View.VISIBLE);
+                case CHILDREN:
+                    childImage.setVisibility(View.VISIBLE);
+            }
+
         } else {
             Log.e("ShelterListAdapter", "Tried to load data for shelter at index " + position + " which does not exist");
         }
