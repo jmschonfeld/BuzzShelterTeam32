@@ -14,10 +14,10 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import edu.gatech.spacebarz.buzzshelter.model.FirebaseAuthManager;
+import edu.gatech.spacebarz.buzzshelter.util.FirebaseAuthManager;
 import edu.gatech.spacebarz.buzzshelter.model.Shelter;
-import edu.gatech.spacebarz.buzzshelter.model.ShelterListAdapter;
-import edu.gatech.spacebarz.buzzshelter.model.ShelterListAdapter.ShelterFilter;
+import edu.gatech.spacebarz.buzzshelter.util.ShelterListAdapter;
+import edu.gatech.spacebarz.buzzshelter.util.ShelterListAdapter.ShelterFilter;
 
 public class ShelterListActivity extends AppCompatActivity {
 

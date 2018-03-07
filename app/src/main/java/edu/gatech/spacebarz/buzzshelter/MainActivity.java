@@ -6,7 +6,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
-import edu.gatech.spacebarz.buzzshelter.model.FirebaseAuthManager;
+import edu.gatech.spacebarz.buzzshelter.util.FirebaseAuthManager;
 
 public class MainActivity extends AppCompatActivity {
 

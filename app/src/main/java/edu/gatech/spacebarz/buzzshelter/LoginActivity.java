@@ -22,10 +22,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
+import com.google.firebase.auth.FirebaseAuthInvalidUserException;
 
 import java.util.concurrent.CountDownLatch;
 
-import edu.gatech.spacebarz.buzzshelter.model.FirebaseAuthManager;
+import edu.gatech.spacebarz.buzzshelter.util.FirebaseAuthManager;
+import edu.gatech.spacebarz.buzzshelter.util.UIUtil;
 
 public class LoginActivity extends AppCompatActivity {
     private UserLoginTask mAuthTask = null;
@@ -145,12 +147,7 @@ public class LoginActivity extends AppCompatActivity {
             focusView.requestFocus();
         } else {
             // Close soft keyboard
-            View v = this.getCurrentFocus();
-            if (v != null) {
-                InputMethodManager im = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                if (im != null)
-                    im.hideSoftInputFromWindow(v.getWindowToken(), 0);
-            }
+            UIUtil.closeSoftKeyboard(getCurrentFocus(), getBaseContext());
 
 //          BG login task
             mAuthTask = new UserLoginTask(email, password);
@@ -208,7 +205,7 @@ public class LoginActivity extends AppCompatActivity {
             if (success) {
                 moveToMainActivity();
             } else {
-                if (exe instanceof FirebaseAuthInvalidCredentialsException) {
+                if (exe instanceof FirebaseAuthInvalidCredentialsException || exe instanceof FirebaseAuthInvalidUserException) {
                     mPasswordView.requestFocus();
                     mPasswordView.setError("Invalid email or password");
                 } else {

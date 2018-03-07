@@ -10,8 +10,8 @@ import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.Toast;
 
-import edu.gatech.spacebarz.buzzshelter.model.CustomShelterFilter;
-import edu.gatech.spacebarz.buzzshelter.model.ShelterListAdapter.ShelterFilter;
+import edu.gatech.spacebarz.buzzshelter.util.CustomShelterFilter;
+import edu.gatech.spacebarz.buzzshelter.util.ShelterListAdapter.ShelterFilter;
 
 public class FilterSheltersActivity extends AppCompatActivity {
 
