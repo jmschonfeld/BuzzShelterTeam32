@@ -42,4 +42,20 @@
     <string name="shelter_gender">Gender: %1$s</string>
     <string name="shelter_restrictions">Restrictions: %1$s</string>
     <string name="shelter_notes">Notes: %1$s</string>
+
+    <!-- Shelter Filter Strings -->
+    <string name="title_activity_shelter_filter">Filter Shelters</string>
+    <string name="shelter_filter_name_label">Name:</string>
+    <string name="shelter_filter_gender_label">Gender:</string>
+    <string name="shelter_filter_gender_male">Male</string>
+    <string name="shelter_filter_gender_female">Female</string>
+    <string name="shelter_filter_gender_all">All</string>
+    <string name="shelter_filter_age_label">Age:</string>
+    <string name="shelter_filter_age_all">All</string>
+    <string name="shelter_filter_age_newborn">Families with Newborns</string>
+    <string name="shelter_filter_age_child">Children</string>
+    <string name="shelter_filter_age_youngadults">Young Adults</string>
+    <string name="shelter_filter_veteran_label">Veteran Status:</string>
+    <string name="shelter_filter_veteran_check">Veteran</string>
+    <string name="shelter_filter_button_label">Find Shelters</string>
 </resources>

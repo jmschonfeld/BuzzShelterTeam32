@@ -8,6 +8,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -20,8 +21,6 @@ import edu.gatech.spacebarz.buzzshelter.model.ShelterListAdapter;
 import edu.gatech.spacebarz.buzzshelter.model.ShelterListAdapter.ShelterFilter;
 
 public class ShelterListActivity extends AppCompatActivity {
-
-    public static final int FILTER_LIST_REQUEST_CODE = 1001;
 
     private ListView listView;
     private ProgressBar progressBar;
@@ -36,10 +35,12 @@ public class ShelterListActivity extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == FILTER_LIST_REQUEST_CODE && resultCode == RESULT_OK) {
+        Log.i("ActivityResult", "code=" + requestCode + " res=" + resultCode + " ok=" + RESULT_OK + " cancel=" + RESULT_CANCELED);
+        if (requestCode == FilterSheltersActivity.FILTER_LIST_RETURN_REQUEST_CODE && resultCode == RESULT_OK) {
             if (data.hasExtra("filter")) {
                 ShelterFilter filter = (ShelterFilter) data.getSerializableExtra("filter");
                 this.listAdapter.setFilter(filter);
+                Log.i("New Size", ""+ this.listAdapter.getCount());
                 final Snackbar snack = Snackbar.make(findViewById(android.R.id.content), "Filtered shelter list", Snackbar.LENGTH_INDEFINITE);
                 snack.setAction("View All Shelters", new View.OnClickListener() {
                     @Override
@@ -61,20 +62,12 @@ public class ShelterListActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         FloatingActionButton fab = findViewById(R.id.fab);
+        final Context context = this;
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //TODO: Open filter screen
-
-                // THIS IS TESTING CODE ONLY:
-                Intent intent = new Intent();
-                intent.putExtra("requestCode", FILTER_LIST_REQUEST_CODE);
-                intent.putExtra("filter", new ShelterFilter() {
-                    public boolean filter(Shelter s) {
-                        return s.getName().toLowerCase().contains("a");
-                    }
-                });
-                onActivityResult(FILTER_LIST_REQUEST_CODE, RESULT_OK, intent);
+                Intent intent = new Intent(context, FilterSheltersActivity.class);
+                startActivityForResult(intent, FilterSheltersActivity.FILTER_LIST_RETURN_REQUEST_CODE);
             }
         });
 
@@ -97,7 +90,6 @@ public class ShelterListActivity extends AppCompatActivity {
             }
         });
 
-        final Context context = this;
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
