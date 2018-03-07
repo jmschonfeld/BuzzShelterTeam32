@@ -15,8 +15,6 @@ import edu.gatech.spacebarz.buzzshelter.model.ShelterListAdapter.ShelterFilter;
 
 public class FilterSheltersActivity extends AppCompatActivity {
 
-    public static final int FILTER_LIST_RETURN_REQUEST_CODE = 1001;
-
     private boolean finishedFilter = false;
 
     private EditText nameFilter;
