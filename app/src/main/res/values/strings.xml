@@ -35,6 +35,7 @@
 
     <!-- Shelter List Strings -->
     <string name="title_activity_shelter_list">Shelters</string>
+    <string name="shelter_no_data_text">No Shelters Found</string>
 
     <!-- Shelter Detail Strings -->
     <string name="title_activity_shelter_detail">Shelter Details</string>

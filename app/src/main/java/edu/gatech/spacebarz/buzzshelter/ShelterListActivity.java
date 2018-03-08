@@ -12,6 +12,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import edu.gatech.spacebarz.buzzshelter.model.FirebaseAuthManager;
@@ -26,6 +27,7 @@ public class ShelterListActivity extends AppCompatActivity {
     private ListView listView;
     private ProgressBar progressBar;
     private ShelterListAdapter listAdapter;
+    private TextView noDataView;
 
     @Override
     public void finish() {
@@ -36,17 +38,23 @@ public class ShelterListActivity extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        Log.i("ActivityResult", "code=" + requestCode + " res=" + resultCode + " ok=" + RESULT_OK + " cancel=" + RESULT_CANCELED);
         if (requestCode == FILTER_LIST_RETURN_REQUEST_CODE && resultCode == RESULT_OK) {
             if (data.hasExtra("filter")) {
                 ShelterFilter filter = (ShelterFilter) data.getSerializableExtra("filter");
                 this.listAdapter.setFilter(filter);
-                Log.i("New Size", ""+ this.listAdapter.getCount());
+                if (this.listAdapter.getCount() == 0) {
+                    this.listView.setVisibility(View.GONE);
+                    this.noDataView.setVisibility(View.VISIBLE);
+                }
                 final Snackbar snack = Snackbar.make(findViewById(android.R.id.content), "Filtered shelter list", Snackbar.LENGTH_INDEFINITE);
                 snack.setAction("View All Shelters", new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         listAdapter.setFilter(null);
+                        if (listAdapter.getCount() != 0) {
+                            listView.setVisibility(View.VISIBLE);
+                            noDataView.setVisibility(View.GONE);
+                        }
                         snack.dismiss();
                     }
                 });
@@ -74,8 +82,11 @@ public class ShelterListActivity extends AppCompatActivity {
 
         listView = findViewById(R.id.shelters_list_view);
         progressBar = findViewById(R.id.shelters_loading_pbar);
+        noDataView = findViewById(R.id.shelter_no_data_view);
+
 
         listView.setVisibility(View.GONE);
+        noDataView.setVisibility(View.GONE);
         progressBar.setVisibility(View.VISIBLE);
 
         listAdapter = new ShelterListAdapter(this);
