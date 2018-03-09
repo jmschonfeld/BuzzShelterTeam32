@@ -1,17 +1,20 @@
 package edu.gatech.spacebarz.buzzshelter;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.Toast;
 
 import edu.gatech.spacebarz.buzzshelter.util.CustomShelterFilter;
 import edu.gatech.spacebarz.buzzshelter.util.ShelterListAdapter.ShelterFilter;
+import edu.gatech.spacebarz.buzzshelter.util.UIUtil;
 
 public class FilterSheltersActivity extends AppCompatActivity {
 
@@ -19,6 +22,7 @@ public class FilterSheltersActivity extends AppCompatActivity {
 
     private EditText nameFilter;
     private RadioButton genderMaleRadio, genderFemaleRadio, genderAllRadio, ageNewbornRadio, ageChildRadio, ageYARadio, ageAllRadio;
+    private RadioGroup groupGender, groupAge;
     private CheckBox veteranBox;
 
     @Override
@@ -44,6 +48,37 @@ public class FilterSheltersActivity extends AppCompatActivity {
         ageYARadio = findViewById(R.id.shelter_filter_age_radio4);
         veteranBox = findViewById(R.id.shelter_filter_veteran);
         final Button filterButton = findViewById(R.id.shelter_filter_button);
+
+        groupGender = findViewById(R.id.shelter_filter_gender_group);
+        groupAge = findViewById(R.id.shelter_filter_age_group);
+
+        nameFilter.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                nameFilter.setCursorVisible(true);
+            }
+        });
+
+        groupGender.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                onNonTextSelect();
+            }
+        });
+
+        groupAge.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                onNonTextSelect();
+            }
+        });
+
+        veteranBox.setOnCheckedChangeListener(new CheckBox.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton button, boolean state) {
+                onNonTextSelect();
+            }
+        });
 
         filterButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -80,5 +115,10 @@ public class FilterSheltersActivity extends AppCompatActivity {
         finishedFilter = true;
         setResult(RESULT_OK, intent);
         finish();
+    }
+
+    private void onNonTextSelect() {
+        UIUtil.closeSoftKeyboard(getCurrentFocus(), getBaseContext());
+        nameFilter.setCursorVisible(false);
     }
 }
