@@ -1,6 +1,8 @@
-package edu.gatech.spacebarz.buzzshelter.model;
+package edu.gatech.spacebarz.buzzshelter.util;
 
 import android.util.Log;
+
+import edu.gatech.spacebarz.buzzshelter.model.Shelter;
 
 // This must be its own class and NOT an inner class because it needs to be serializable
 public class CustomShelterFilter extends ShelterListAdapter.ShelterFilter {
@@ -44,7 +46,7 @@ public class CustomShelterFilter extends ShelterListAdapter.ShelterFilter {
             return false;
         }
 
-        if (veteran && !shelter.getVeteran()) {
+        if (!veteran && shelter.getVeteran()) {
             return false;
         }
 

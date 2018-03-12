@@ -12,7 +12,7 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import edu.gatech.spacebarz.buzzshelter.model.FirebaseDBManager;
+import edu.gatech.spacebarz.buzzshelter.util.FirebaseDBManager;
 import edu.gatech.spacebarz.buzzshelter.model.Shelter;
 
 public class ShelterDetailActivity extends AppCompatActivity {

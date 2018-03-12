@@ -1,4 +1,4 @@
-package edu.gatech.spacebarz.buzzshelter.model;
+package edu.gatech.spacebarz.buzzshelter.util;
 
 
 import android.util.Log;
@@ -12,6 +12,9 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.lang.reflect.Array;
 import java.util.concurrent.CountDownLatch;
+
+import edu.gatech.spacebarz.buzzshelter.model.Shelter;
+import edu.gatech.spacebarz.buzzshelter.model.UserInfo;
 
 public class FirebaseDBManager {
 
