@@ -85,8 +85,6 @@ public class ShelterListAdapter extends ArrayAdapter<Shelter> {
                     public void run() {
                         clear();
                         addAll(shelters);
-                        Log.i("PriSet", shelters[2].toString());
-                        setPriorityItem(shelters[2]);
                         notifyDataSetChanged();
                         if (callback != null) {
                             callback.run();
