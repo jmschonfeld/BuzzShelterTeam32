@@ -12,9 +12,13 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.TwoLineListItem;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 
 import edu.gatech.spacebarz.buzzshelter.R;
 
@@ -25,13 +29,35 @@ public class ShelterListAdapter extends ArrayAdapter<Shelter> {
         public abstract boolean filter(Shelter shelter);
     }
 
+    public enum ShelterSort {
+        DEFAULT() {
+            @Override
+            public int compare(Shelter a, Shelter b) {
+                return a.getUID().compareToIgnoreCase(b.getUID());
+            }
+        }, ALPHABETICAL() {
+            @Override
+            public int compare(Shelter a, Shelter b) {
+                return a.getName().compareToIgnoreCase(b.getName());
+            }
+        };
+
+        /**
+         * Compares the two given shelters
+         * @return a negative value if a comes before b, zero if a equals b, and a positive value if a comes after b
+         */
+        public abstract int compare(Shelter a, Shelter b);
+    }
+
     public interface FetchDataCallback {
         /** Fetch remote shelters and return them (will be called from a non-main thread) */
         Shelter[] fetch();
     }
 
     private ShelterFilter filter;
-    private Shelter[] fullData;
+    private ShelterSort sort = ShelterSort.DEFAULT;
+    private ArrayList<Shelter> fullData;
+    private Shelter priorityItem;
 
     /** Creates an empty shelter list adapter (used to fetch remote data) */
     public ShelterListAdapter(Context context) {
@@ -51,7 +77,7 @@ public class ShelterListAdapter extends ArrayAdapter<Shelter> {
             @Override
             public void run() {
                 final Shelter[] shelters = fetchCaller.fetch();
-                fullData = shelters;
+                fullData = new ArrayList<>(Arrays.asList(shelters));
                 filter = null;
                 Log.i("ShelterListAdapter", "Retrieved shelter data (" + shelters.length + " shelters)");
                 uiHandler.post(new Runnable() {
@@ -59,6 +85,7 @@ public class ShelterListAdapter extends ArrayAdapter<Shelter> {
                     public void run() {
                         clear();
                         addAll(shelters);
+                        //setPriorityItem(shelters[2]);
                         notifyDataSetChanged();
                         if (callback != null) {
                             callback.run();
@@ -121,6 +148,11 @@ public class ShelterListAdapter extends ArrayAdapter<Shelter> {
                     childImage.setVisibility(View.VISIBLE);
             }
 
+            if (position == 0 && priorityItem != null && priorityItem.equals(shelter)) {
+                Log.i("Color", "SETTING COLOR on index " + shelter.getName());
+                convertView.setBackgroundColor(convertView.getResources().getColor(R.color.listPriorityItemBackground));
+            }
+
         } else {
             Log.e("ShelterListAdapter", "Tried to load data for shelter at index " + position + " which does not exist");
         }
@@ -129,18 +161,59 @@ public class ShelterListAdapter extends ArrayAdapter<Shelter> {
         return convertView;
     }
 
+    private ArrayList<Shelter> getFilteredData() {
+        ArrayList<Shelter> allowed = new ArrayList<>();
+        for (Shelter shelter : fullData) {
+            if (this.filter.filter(shelter)) {
+                allowed.add(shelter);
+            }
+        }
+        return allowed;
+    }
+
     public void setFilter(@Nullable ShelterFilter filter) {
         this.filter = filter;
         clear();
+        if (priorityItem != null) {
+            add(priorityItem);
+        }
         if (this.filter == null) {
             addAll(fullData);
         } else {
-            for (Shelter shelter : fullData) {
-                if (this.filter.filter(shelter)) {
-                    add(shelter);
-                }
-            }
+            addAll(getFilteredData());
         }
         notifyDataSetChanged();
+    }
+
+    public void sort(@NonNull final ShelterSort sorter) {
+        this.sort = sorter;
+        Collections.sort(fullData, new Comparator<Shelter>() {
+            @Override
+            public int compare(Shelter shelter, Shelter t1) {
+                return sorter.compare(shelter, t1);
+            }
+        });
+        setFilter(filter);
+    }
+
+    public void setPriorityItem(@Nullable Shelter item) {
+        if (item != null && !fullData.contains(item)) {
+            throw new IllegalArgumentException("Cannot set a priority item if the item is not in the list");
+        }
+
+        if (item == null) {
+            if (priorityItem == null) {
+                return;
+            }
+            fullData.add(priorityItem);
+            sort(sort);
+        } else {
+            if (priorityItem != null) {
+                setPriorityItem(null);
+            }
+            fullData.remove(item);
+            priorityItem = item;
+            sort(sort);
+        }
     }
 }
