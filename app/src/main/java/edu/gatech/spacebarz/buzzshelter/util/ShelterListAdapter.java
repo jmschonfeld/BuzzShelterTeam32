@@ -86,7 +86,6 @@ public class ShelterListAdapter extends ArrayAdapter<Shelter> {
                     public void run() {
                         clear();
                         addAll(shelters);
-                        //setPriorityItem(shelters[2]);
                         notifyDataSetChanged();
                         if (callback != null) {
                             callback.run();
