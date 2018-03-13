@@ -1,4 +1,4 @@
-package edu.gatech.spacebarz.buzzshelter.model;
+package edu.gatech.spacebarz.buzzshelter.util;
 
 import android.content.Context;
 import android.graphics.Typeface;
@@ -21,6 +21,7 @@ import java.util.Collections;
 import java.util.Comparator;
 
 import edu.gatech.spacebarz.buzzshelter.R;
+import edu.gatech.spacebarz.buzzshelter.model.Shelter;
 
 public class ShelterListAdapter extends ArrayAdapter<Shelter> {
 

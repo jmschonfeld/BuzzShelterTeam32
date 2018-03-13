@@ -23,10 +23,11 @@ import com.google.firebase.auth.FirebaseAuthWeakPasswordException;
 import java.util.concurrent.CountDownLatch;
 import java.util.regex.Pattern;
 
-import edu.gatech.spacebarz.buzzshelter.model.FirebaseAuthManager;
-import edu.gatech.spacebarz.buzzshelter.model.FirebaseDBManager;
+import edu.gatech.spacebarz.buzzshelter.util.FirebaseAuthManager;
+import edu.gatech.spacebarz.buzzshelter.util.FirebaseDBManager;
 import edu.gatech.spacebarz.buzzshelter.model.UserInfo;
 import edu.gatech.spacebarz.buzzshelter.model.UserInfo.UserRole;
+import edu.gatech.spacebarz.buzzshelter.util.UIUtil;
 
 public class RegisterActivity extends AppCompatActivity {
 
@@ -103,15 +104,6 @@ public class RegisterActivity extends AppCompatActivity {
         regTask.execute((Void) null);
     }
 
-    private void closeSoftKeyboard() {
-        View v = this.getCurrentFocus();
-        if (v != null) {
-            InputMethodManager im = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-            if (im != null)
-                im.hideSoftInputFromWindow(v.getWindowToken(), 0);
-        }
-    }
-
     public void closeOnSuccess() {
         Toast.makeText(getApplicationContext(), R.string.toast_account_created, Toast.LENGTH_SHORT).show();
 //      Undo auto sign in
@@ -134,7 +126,7 @@ public class RegisterActivity extends AppCompatActivity {
             phone = phn;
             role = rl;
             progressBar.setVisibility(View.VISIBLE);
-            closeSoftKeyboard();
+            UIUtil.closeSoftKeyboard(getCurrentFocus(), getBaseContext());
         }
 
         @Override
@@ -175,7 +167,7 @@ public class RegisterActivity extends AppCompatActivity {
                 if (exe instanceof FirebaseAuthUserCollisionException){
                     emailView.setError(getString(R.string.error_email_already_registered));
                     focusView = emailView;
-                    closeSoftKeyboard();
+                    UIUtil.closeSoftKeyboard(getCurrentFocus(), getBaseContext());
                 } else if (exe instanceof FirebaseAuthWeakPasswordException) {
                     passwordView.setError(getString(R.string.error_password_requirements));
                     focusView = passwordView;
