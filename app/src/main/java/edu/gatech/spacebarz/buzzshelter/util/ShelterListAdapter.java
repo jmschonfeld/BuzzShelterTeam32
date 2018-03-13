@@ -85,6 +85,8 @@ public class ShelterListAdapter extends ArrayAdapter<Shelter> {
                     public void run() {
                         clear();
                         addAll(shelters);
+                        Log.i("PriSet", shelters[2].toString());
+                        setPriorityItem(shelters[2]);
                         notifyDataSetChanged();
                         if (callback != null) {
                             callback.run();
@@ -148,9 +150,9 @@ public class ShelterListAdapter extends ArrayAdapter<Shelter> {
             }
 
             if (position == 0 && priorityItem != null && priorityItem.equals(shelter)) {
-                Log.i("Color", "SETTING COLOR on index " + shelter.getName());
                 convertView.setBackgroundColor(convertView.getResources().getColor(R.color.listPriorityItemBackground));
-            }
+            } else
+                convertView.setBackgroundColor(convertView.getResources().getColor(R.color.white));
 
         } else {
             Log.e("ShelterListAdapter", "Tried to load data for shelter at index " + position + " which does not exist");
