@@ -29,7 +29,13 @@ public class Reservation {
     public void setSize(int size) {
         this.size = size;
     }
+    public String getReservationID() {
+        return reservationID;
+    }
+    public void setReservationID(String reservationID) {
+        this.reservationID = reservationID;
+    }
 
-    private String creatorID, shelterID;
+    private String creatorID, shelterID, reservationID;
     private int size;
 }
