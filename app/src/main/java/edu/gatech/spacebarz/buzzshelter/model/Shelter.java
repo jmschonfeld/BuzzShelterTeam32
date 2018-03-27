@@ -3,6 +3,7 @@ package edu.gatech.spacebarz.buzzshelter.model;
 import com.google.firebase.database.IgnoreExtraProperties;
 
 import java.io.Serializable;
+import java.util.Arrays;
 
 @IgnoreExtraProperties
 public class Shelter implements Serializable {
@@ -10,7 +11,7 @@ public class Shelter implements Serializable {
     /** Required for firebase, should not be used by the actual app */
     public Shelter() {}
 
-    public Shelter(String id, String n, String capS, String res, String addr, String note, String ph, int capN, double lat, double lon, Gender gen, AgeRest age, boolean vet) {
+    public Shelter(String id, String n, String capS, String res, String addr, String note, String ph, int capN, double lat, double lon, Gender gen, AgeRest age, boolean vet, String[] reservations) {
         uid = id;
         name = n;
         capacityStr = capS;
@@ -22,8 +23,9 @@ public class Shelter implements Serializable {
         this.lat = lat;
         this.lon = lon;
         gender = gen;
-        age = ageRest;
+        ageRest = age;
         veteran = vet;
+        reservationIDs = reservations;
     }
 
     @Override
@@ -40,7 +42,7 @@ public class Shelter implements Serializable {
         return this.equals(temp) && temp.getName().equals(name) && temp.getCapacityStr().equals(capacityStr) &&
                 temp.getRestrictions().equals(restrictions) && temp.getAddress().equals(address) && temp.getNotes().equals(notes) &&
                 temp.getPhone().equals(phone) && temp.getCapacityNum() == capacityNum && temp.getLat() == lat &&
-                temp.getLon() == lon && temp.getGender().equals(gender) && temp.getVeteran() == veteran;
+                temp.getLon() == lon && temp.getGender().equals(gender) && temp.getVeteran() == veteran && Arrays.deepEquals(temp.reservationIDs, reservationIDs);
     }
 
     public String getUID() {
@@ -121,6 +123,12 @@ public class Shelter implements Serializable {
     public void setVeteran(boolean veteran) {
         this.veteran = veteran;
     }
+    public String[] getReservationIDs() {
+        return reservationIDs;
+    }
+    public void setReservationIDs(String[] reservationIDs) {
+        this.reservationIDs = reservationIDs;
+    }
 
 
     public enum Gender {
@@ -137,5 +145,6 @@ public class Shelter implements Serializable {
     private Gender gender;
     private AgeRest ageRest;
     private boolean veteran;
+    private String[] reservationIDs;
 }
 

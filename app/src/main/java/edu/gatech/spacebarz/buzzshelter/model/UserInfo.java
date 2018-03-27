@@ -4,7 +4,7 @@ import com.google.firebase.database.IgnoreExtraProperties;
 
 @IgnoreExtraProperties
 public class UserInfo {
-    private String uid, name, phone;
+    private String uid, name, phone, currentReservation;
     private UserRole role;
 
     /** Required for use with Firebase, should not be used by the app */
@@ -12,10 +12,11 @@ public class UserInfo {
 
     }
 
-    public UserInfo(String u, String n, String p, UserRole r) {
+    public UserInfo(String u, String n, String p, String reservation, UserRole r) {
         uid = u;
         name = n;
         phone = p;
+        currentReservation = reservation;
         role = r;
     }
 
@@ -35,6 +36,10 @@ public class UserInfo {
         return role;
     }
 
+    public String getCurrentReservation() {
+        return currentReservation;
+    }
+
     public void setName(String name) {
         this.name = name;
     }
@@ -45,6 +50,10 @@ public class UserInfo {
 
     public void setRole(UserRole role) {
         this.role = role;
+    }
+
+    public void setCurrentReservation(String reservation) {
+        this.currentReservation = reservation;
     }
 
     public enum UserRole {

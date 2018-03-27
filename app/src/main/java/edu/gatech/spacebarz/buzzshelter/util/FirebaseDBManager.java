@@ -13,6 +13,7 @@ import com.google.firebase.database.ValueEventListener;
 import java.lang.reflect.Array;
 import java.util.concurrent.CountDownLatch;
 
+import edu.gatech.spacebarz.buzzshelter.model.Reservation;
 import edu.gatech.spacebarz.buzzshelter.model.Shelter;
 import edu.gatech.spacebarz.buzzshelter.model.UserInfo;
 
@@ -40,6 +41,29 @@ public class FirebaseDBManager {
         if (ex != null) {
             throw ex;
         }
+    }
+
+    public static Reservation retrieveReservation(String rid) throws DatabaseException {
+        RetrieveObjectSynchronousTask<Reservation> task = new RetrieveObjectSynchronousTask<>(DatabaseKey.RESERVATION, rid, Reservation.class);
+        DatabaseException ex = task.run();
+        if (ex != null) {
+            throw ex;
+        }
+        return task.getValue();
+    }
+
+    public static void setReservation(Reservation updated) throws DatabaseException {
+        StoreObjectSynchronousTask<Reservation> task = new StoreObjectSynchronousTask<>(DatabaseKey.RESERVATION, updated.getReservationID());
+        DatabaseException ex = task.run(updated);
+        if (ex != null) {
+            throw ex;
+        }
+    }
+
+    public static void insertNewReservation(Reservation reservation) throws DatabaseException {
+        String uid = generateUID(DatabaseKey.RESERVATION);
+        reservation.setReservationID(uid);
+        setReservation(reservation);
     }
 
     public static Shelter[] retrieveAllShelters() throws DatabaseException {
@@ -217,10 +241,10 @@ public class FirebaseDBManager {
     }
 
     private enum DatabaseKey {
-        USER("SSUser"), SHELTER("SSShelter");
+        USER("SSUser"), SHELTER("SSShelter"), RESERVATION("SSReservation");
 
         private String key;
-        private DatabaseKey(String k) {
+        DatabaseKey(String k) {
             key = k;
         }
 
