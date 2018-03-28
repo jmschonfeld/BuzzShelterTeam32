@@ -13,6 +13,7 @@ import com.google.firebase.database.ValueEventListener;
 import java.lang.reflect.Array;
 import java.util.concurrent.CountDownLatch;
 
+import edu.gatech.spacebarz.buzzshelter.model.Reservation;
 import edu.gatech.spacebarz.buzzshelter.model.Shelter;
 import edu.gatech.spacebarz.buzzshelter.model.UserInfo;
 
@@ -37,6 +38,37 @@ public class FirebaseDBManager {
     public static void setUserInfo(UserInfo updated) throws DatabaseException {
         StoreObjectSynchronousTask<UserInfo> task = new StoreObjectSynchronousTask<>(DatabaseKey.USER, updated.getUid());
         DatabaseException ex = task.run(updated);
+        if (ex != null) {
+            throw ex;
+        }
+    }
+
+    public static Reservation retrieveReservation(String rid) throws DatabaseException {
+        RetrieveObjectSynchronousTask<Reservation> task = new RetrieveObjectSynchronousTask<>(DatabaseKey.RESERVATION, rid, Reservation.class);
+        DatabaseException ex = task.run();
+        if (ex != null) {
+            throw ex;
+        }
+        return task.getValue();
+    }
+
+    public static void setReservation(Reservation updated) throws DatabaseException {
+        StoreObjectSynchronousTask<Reservation> task = new StoreObjectSynchronousTask<>(DatabaseKey.RESERVATION, updated.getReservationID());
+        DatabaseException ex = task.run(updated);
+        if (ex != null) {
+            throw ex;
+        }
+    }
+
+    public static void insertNewReservation(Reservation reservation) throws DatabaseException {
+        String uid = generateUID(DatabaseKey.RESERVATION);
+        reservation.setReservationID(uid);
+        setReservation(reservation);
+    }
+
+    public static void deleteReservation(Reservation reservation) throws DatabaseException {
+        DeleteObjectSynchronousTask<Reservation> task = new DeleteObjectSynchronousTask<>(DatabaseKey.RESERVATION, reservation.getReservationID());
+        DatabaseException ex = task.run();
         if (ex != null) {
             throw ex;
         }
@@ -79,6 +111,42 @@ public class FirebaseDBManager {
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference myRef = database.getReference(key.toString());
         return myRef.push().getKey();
+    }
+
+    private static class DeleteObjectSynchronousTask<T> {
+
+        private String key;
+        private DatabaseError error;
+
+        private DeleteObjectSynchronousTask(DatabaseKey dbKey, String id) {
+            this.key = "/" + dbKey + "/" + id;
+        }
+
+        private DatabaseException run() {
+            FirebaseDatabase database = FirebaseDatabase.getInstance();
+            DatabaseReference myRef = database.getReference(key);
+            final CountDownLatch latch = new CountDownLatch(1);
+            myRef.removeValue(new DatabaseReference.CompletionListener() {
+                @Override
+                public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                    if (databaseError != null) {
+                        error = databaseError;
+                    }
+                    latch.countDown();
+                }
+            });
+            try {
+                latch.await();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            if (error == null) {
+                return null;
+            } else {
+                return error.toException();
+            }
+        }
+
     }
 
     private static class StoreObjectSynchronousTask<T> {
@@ -217,10 +285,10 @@ public class FirebaseDBManager {
     }
 
     private enum DatabaseKey {
-        USER("SSUser"), SHELTER("SSShelter");
+        USER("SSUser"), SHELTER("SSShelter"), RESERVATION("SSReservation");
 
         private String key;
-        private DatabaseKey(String k) {
+        DatabaseKey(String k) {
             key = k;
         }
 

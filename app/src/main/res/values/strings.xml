@@ -20,6 +20,7 @@
     <string name="toast_logged_out">Logged out!</string>
     <string name="title_activity_register">Register</string>
     <string name="toast_account_created">Account created</string>
+    <string name="toast_reservation_canceled">Reservation canceled</string>
 
     <!-- Strings related to registration -->
     <string name="registration_name">Name</string>
@@ -39,10 +40,15 @@
 
     <!-- Shelter Detail Strings -->
     <string name="title_activity_shelter_detail">Shelter Details</string>
-    <string name="shelter_capacity">Capacity: %1$s</string>
+    <string name="shelter_capacity">Capacity: %1$s (%2$d vacancies)</string>
     <string name="shelter_gender">Gender: %1$s</string>
     <string name="shelter_restrictions">Restrictions: %1$s</string>
     <string name="shelter_notes">Notes: %1$s</string>
+    <string name="shelter_reserve">Reserve space</string>
+    <string name="shelter_no_vacancies">No vacancy</string>
+    <string name="shelter_cancel">Cancel reservation</string>
+    <string name="shelter_res_beds">Select number of beds</string>
+    <string name="shelter_res_loading">Loading...</string>
 
     <!-- Shelter Filter Strings -->
     <string name="title_activity_shelter_filter">Filter Shelters</string>

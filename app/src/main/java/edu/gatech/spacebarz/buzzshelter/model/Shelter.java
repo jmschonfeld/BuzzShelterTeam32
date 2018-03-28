@@ -3,6 +3,12 @@ package edu.gatech.spacebarz.buzzshelter.model;
 import com.google.firebase.database.IgnoreExtraProperties;
 
 import java.io.Serializable;
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+
+import edu.gatech.spacebarz.buzzshelter.util.FirebaseDBManager;
 
 @IgnoreExtraProperties
 public class Shelter implements Serializable {
@@ -10,7 +16,7 @@ public class Shelter implements Serializable {
     /** Required for firebase, should not be used by the actual app */
     public Shelter() {}
 
-    public Shelter(String id, String n, String capS, String res, String addr, String note, String ph, int capN, double lat, double lon, Gender gen, AgeRest age, boolean vet) {
+    public Shelter(String id, String n, String capS, String res, String addr, String note, String ph, int capN, double lat, double lon, Gender gen, AgeRest age, boolean vet, ArrayList<String> reservations) {
         uid = id;
         name = n;
         capacityStr = capS;
@@ -22,8 +28,9 @@ public class Shelter implements Serializable {
         this.lat = lat;
         this.lon = lon;
         gender = gen;
-        age = ageRest;
+        ageRest = age;
         veteran = vet;
+        reservationIDs = reservations;
     }
 
     @Override
@@ -121,6 +128,24 @@ public class Shelter implements Serializable {
     public void setVeteran(boolean veteran) {
         this.veteran = veteran;
     }
+    public ArrayList<String> getReservationIDs() {
+        return reservationIDs;
+    }
+    public void setReservationIDs(ArrayList<String> reservationIDs) {
+        this.reservationIDs = reservationIDs;
+    }
+
+//  Is there a better way to do this?
+    public int getVacancyNum() {
+        int vac = capacityNum;
+
+        if (reservationIDs != null) {
+            for (String id : reservationIDs)
+                vac -= FirebaseDBManager.retrieveReservation(id).getSize();
+        }
+
+        return vac;
+    }
 
 
     public enum Gender {
@@ -137,5 +162,6 @@ public class Shelter implements Serializable {
     private Gender gender;
     private AgeRest ageRest;
     private boolean veteran;
+    private ArrayList<String> reservationIDs;
 }
 
