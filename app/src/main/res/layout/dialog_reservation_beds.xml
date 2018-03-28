@@ -4,6 +4,12 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:text="@string/selector_beds"/>
+
     <NumberPicker
         android:id="@+id/reservation_picker"
         android:layout_width="wrap_content"
@@ -24,13 +30,13 @@
             android:id="@+id/reservation_cancel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Cancel" />
+            android:text="@string/selector_cancel" />
 
         <Button
             android:id="@+id/reservation_okay"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Okay" />
+            android:text="@string/selector_okay" />
     </LinearLayout>
 
 

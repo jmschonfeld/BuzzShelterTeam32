@@ -3,10 +3,7 @@ package edu.gatech.spacebarz.buzzshelter.model;
 import com.google.firebase.database.IgnoreExtraProperties;
 
 import java.io.Serializable;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 
 import edu.gatech.spacebarz.buzzshelter.util.FirebaseDBManager;
 
@@ -135,14 +132,12 @@ public class Shelter implements Serializable {
         this.reservationIDs = reservationIDs;
     }
 
-//  Is there a better way to do this?
     public int getVacancyNum() {
         int vac = capacityNum;
 
-        if (reservationIDs != null) {
+        if (reservationIDs != null)
             for (String id : reservationIDs)
                 vac -= FirebaseDBManager.retrieveReservation(id).getSize();
-        }
 
         return vac;
     }

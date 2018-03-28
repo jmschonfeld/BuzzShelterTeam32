@@ -107,7 +107,9 @@ public class ShelterListActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 Shelter shelter = listAdapter.getItem(i);
                 Intent intent = new Intent(context, ShelterDetailActivity.class);
+//              Here?
                 intent.putExtra("shelter", shelter);
+                intent.putExtra("shelterUID", shelter.getUID());
                 startActivity(intent);
             }
         });
