@@ -5,6 +5,8 @@ import com.google.firebase.database.IgnoreExtraProperties;
 import java.io.Serializable;
 import java.util.Arrays;
 
+import edu.gatech.spacebarz.buzzshelter.util.FirebaseDBManager;
+
 @IgnoreExtraProperties
 public class Shelter implements Serializable {
 
@@ -128,6 +130,16 @@ public class Shelter implements Serializable {
     }
     public void setReservationIDs(String[] reservationIDs) {
         this.reservationIDs = reservationIDs;
+    }
+
+//  Is there a better way to do this?
+    public int getVacancyNum() {
+        int vac = capacityNum;
+
+        for (String id: reservationIDs)
+            vac -= FirebaseDBManager.retrieveReservation(id).getSize();
+
+        return vac;
     }
 
 

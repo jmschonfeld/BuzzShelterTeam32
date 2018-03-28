@@ -150,7 +150,7 @@ public class RegisterActivity extends AppCompatActivity {
                 return false;
             }
 
-            FirebaseDBManager.setUserInfo(new UserInfo(FirebaseAuthManager.getCurrentUserUID(), name, phone, role));
+            FirebaseDBManager.setUserInfo(new UserInfo(FirebaseAuthManager.getCurrentUserUID(), name, phone, "", role));
             Log.i("Registration", "Created new user registration with UID " + FirebaseAuthManager.getCurrentUserUID());
 
             return succ;
