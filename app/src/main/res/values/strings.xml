@@ -21,6 +21,7 @@
     <string name="title_activity_register">Register</string>
     <string name="toast_account_created">Account created</string>
     <string name="toast_reservation_canceled">Reservation canceled</string>
+    <string name="toast_reservation_created">Reservation created</string>
 
     <!-- Strings related to registration -->
     <string name="registration_name">Name</string>
