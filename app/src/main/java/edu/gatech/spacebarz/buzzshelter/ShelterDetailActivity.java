@@ -264,6 +264,7 @@ public class ShelterDetailActivity extends AppCompatActivity {
                                 handler.post(new Runnable() {
                                     @Override
                                     public void run() {
+                                        Toast.makeText(getApplicationContext(), R.string.toast_reservation_created, Toast.LENGTH_LONG).show();
                                         btnRes();
                                     }
                                 });
