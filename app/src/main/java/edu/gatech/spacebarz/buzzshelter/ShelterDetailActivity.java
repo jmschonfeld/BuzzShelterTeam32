@@ -48,7 +48,6 @@ public class ShelterDetailActivity extends AppCompatActivity {
             new Thread() {
                 @Override
                 public void run() {
-                    shelter = FirebaseDBManager.retrieveShelterInfo(shelterUID);
                     userInfo = FirebaseDBManager.retrieveCurrentUserInfo();
                     if (userInfo.getCurrentReservation() != null) {
                         userReservation = FirebaseDBManager.retrieveReservation(userInfo.getCurrentReservation());
