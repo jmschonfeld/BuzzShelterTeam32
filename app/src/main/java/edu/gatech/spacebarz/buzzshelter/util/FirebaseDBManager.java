@@ -66,6 +66,14 @@ public class FirebaseDBManager {
         setReservation(reservation);
     }
 
+    public static void deleteReservation(Reservation reservation) throws DatabaseException {
+        DeleteObjectSynchronousTask<Reservation> task = new DeleteObjectSynchronousTask<>(DatabaseKey.RESERVATION, reservation.getReservationID());
+        DatabaseException ex = task.run();
+        if (ex != null) {
+            throw ex;
+        }
+    }
+
     public static Shelter[] retrieveAllShelters() throws DatabaseException {
         RetrieveObjectListSynchronousTask<Shelter> task = new RetrieveObjectListSynchronousTask<>(DatabaseKey.SHELTER, Shelter.class);
         DatabaseException ex = task.run();
@@ -103,6 +111,42 @@ public class FirebaseDBManager {
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference myRef = database.getReference(key.toString());
         return myRef.push().getKey();
+    }
+
+    private static class DeleteObjectSynchronousTask<T> {
+
+        private String key;
+        private DatabaseError error;
+
+        private DeleteObjectSynchronousTask(DatabaseKey dbKey, String id) {
+            this.key = "/" + dbKey + "/" + id;
+        }
+
+        private DatabaseException run() {
+            FirebaseDatabase database = FirebaseDatabase.getInstance();
+            DatabaseReference myRef = database.getReference(key);
+            final CountDownLatch latch = new CountDownLatch(1);
+            myRef.removeValue(new DatabaseReference.CompletionListener() {
+                @Override
+                public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                    if (databaseError != null) {
+                        error = databaseError;
+                    }
+                    latch.countDown();
+                }
+            });
+            try {
+                latch.await();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            if (error == null) {
+                return null;
+            } else {
+                return error.toException();
+            }
+        }
+
     }
 
     private static class StoreObjectSynchronousTask<T> {

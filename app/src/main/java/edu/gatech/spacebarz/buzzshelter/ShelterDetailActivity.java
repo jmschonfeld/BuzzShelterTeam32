@@ -21,6 +21,12 @@ import android.widget.NumberPicker;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+
+import edu.gatech.spacebarz.buzzshelter.model.Reservation;
+import edu.gatech.spacebarz.buzzshelter.model.UserInfo;
 import edu.gatech.spacebarz.buzzshelter.util.FirebaseAuthManager;
 import edu.gatech.spacebarz.buzzshelter.util.FirebaseDBManager;
 import edu.gatech.spacebarz.buzzshelter.model.Shelter;
@@ -28,6 +34,12 @@ import edu.gatech.spacebarz.buzzshelter.model.Shelter;
 public class ShelterDetailActivity extends AppCompatActivity {
 
     private Shelter shelter;
+    private UserInfo userInfo;
+    private Reservation userReservation;
+    private int vacancyNum;
+
+    private Button resButton;
+    private TextView capacityView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,8 +52,26 @@ public class ShelterDetailActivity extends AppCompatActivity {
         final LinearLayout mainLayout = findViewById(R.id.shelter_detail_main_layout);
 
         if (shelter != null) {
-            loadingLayout.setVisibility(View.GONE);
-            this.setupViewWith(shelter);
+            mainLayout.setVisibility(View.GONE);
+            final Handler uiHandler = new Handler();
+            new Thread() {
+                @Override
+                public void run() {
+                    userInfo = FirebaseDBManager.retrieveCurrentUserInfo();
+                    if (userInfo.getCurrentReservation() != null) {
+                        userReservation = FirebaseDBManager.retrieveReservation(userInfo.getCurrentReservation());
+                    }
+                    vacancyNum = shelter.getVacancyNum();
+                    uiHandler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            mainLayout.setVisibility(View.VISIBLE);
+                            setupViewWith(shelter);
+                            loadingLayout.setVisibility(View.GONE);
+                        }
+                    });
+                }
+            }.start();
         } else {
             mainLayout.setVisibility(View.GONE);
             final Handler uiHandler = new Handler();
@@ -49,6 +79,11 @@ public class ShelterDetailActivity extends AppCompatActivity {
                 @Override
                 public void run() {
                     shelter = FirebaseDBManager.retrieveShelterInfo(shelterUID);
+                    userInfo = FirebaseDBManager.retrieveCurrentUserInfo();
+                    if (userInfo.getCurrentReservation() != null) {
+                        userReservation = FirebaseDBManager.retrieveReservation(userInfo.getCurrentReservation());
+                    }
+                    vacancyNum = shelter.getVacancyNum();
                     uiHandler.post(new Runnable() {
                         @Override
                         public void run() {
@@ -66,7 +101,7 @@ public class ShelterDetailActivity extends AppCompatActivity {
         TextView nameView = findViewById(R.id.shelter_detail_name);
         TextView addrView = findViewById(R.id.shelter_detail_address);
         TextView phoneView = findViewById(R.id.shelter_detail_phone);
-        TextView capacityView = findViewById(R.id.shelter_detail_capacity);
+        capacityView = findViewById(R.id.shelter_detail_capacity);
         TextView restrictionsView = findViewById(R.id.shelter_detail_restrictions);
         TextView genderView = findViewById(R.id.shelter_detail_gender);
         TextView notesView = findViewById(R.id.shelter_detail_notes);
@@ -74,7 +109,7 @@ public class ShelterDetailActivity extends AppCompatActivity {
         nameView.setText(shelter.getName());
         addrView.setText(shelter.getAddress());
         phoneView.setText(shelter.getPhone());
-        capacityView.setText(getResources().getString(R.string.shelter_capacity, shelter.getCapacityStr()));
+        capacityView.setText(getResources().getString(R.string.shelter_capacity, shelter.getCapacityStr(), vacancyNum));
         restrictionsView.setText(getResources().getString(R.string.shelter_restrictions, shelter.getRestrictions()));
         genderView.setText(getResources().getString(R.string.shelter_gender, shelter.getGender().name().toLowerCase()));
         notesView.setText(getResources().getString(R.string.shelter_notes, shelter.getNotes()));
@@ -92,21 +127,16 @@ public class ShelterDetailActivity extends AppCompatActivity {
         Button callButton = findViewById(R.id.shelter_call);
         Button directionsButton = findViewById(R.id.shelter_directions);
         resButton = findViewById(R.id.shelter_reservation_button);
-        
-//      Crashes on condition, not sure why
-//        if (FirebaseDBManager.retrieveCurrentUserInfo().getCurrentReservation().equals(shelter.getUID()))
-//            btnRes();
-//        else {
-//            if (shelter.getVacancyNum() == 0)
-//                btnNoVac();
-//            else
-//                btnNoRes();
-//        }
 
-//      Debug
-//        btnRes();
-        btnNoVac();
-//        btnNoRes();
+        if (userReservation != null && userReservation.getShelterID().equals(shelter.getUID())) {
+            btnRes();
+        } else {
+            if (vacancyNum == 0) {
+                btnNoVac();
+            } else {
+                btnNoRes();
+            }
+        }
 
         final Intent phoneIntent = new Intent(Intent.ACTION_DIAL);
         phoneIntent.setData(Uri.parse("tel:" + shelter.getPhone()));
@@ -138,10 +168,33 @@ public class ShelterDetailActivity extends AppCompatActivity {
 //  Put these in methods just in case we do something like offline action queueing
     private void btnRes() {
         resButton.setText(getResources().getString(R.string.shelter_cancel));
+        resButton.setEnabled(true);
+        final Handler handler = new Handler();
         resButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // TODO: 3/27/18 handle DB res cancel and relaunch activity
+                btnLoading();
+                new Thread() {
+                    @Override
+                    public void run() {
+                        Reservation res = FirebaseDBManager.retrieveReservation(userInfo.getCurrentReservation());
+                        userInfo.setCurrentReservation(null);
+                        FirebaseDBManager.setUserInfo(userInfo);
+                        ArrayList<String> resIDs = shelter.getReservationIDs();
+                        resIDs.remove(res.getReservationID());
+                        shelter.setReservationIDs(resIDs);
+                        FirebaseDBManager.updateShelterInfo(shelter);
+                        FirebaseDBManager.deleteReservation(res);
+                        vacancyNum = shelter.getVacancyNum();
+                        capacityView.setText(getResources().getString(R.string.shelter_capacity, shelter.getCapacityStr(), vacancyNum));
+                        handler.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                btnNoRes();
+                            }
+                        });
+                    }
+                }.start();
             }
         });
     }
@@ -151,13 +204,19 @@ public class ShelterDetailActivity extends AppCompatActivity {
         resButton.setEnabled(false);
     }
 
+    private void btnLoading() {
+        resButton.setText(R.string.shelter_res_loading);
+        resButton.setEnabled(false);
+    }
+
     private void btnNoRes() {
         resButton.setText(getResources().getString(R.string.shelter_reserve));
+        resButton.setEnabled(true);
         resButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-//              Show picker dialog
+                // Show picker dialog
                 final Dialog d = new Dialog(ShelterDetailActivity.this);
                 d.setTitle(getResources().getString(R.string.shelter_res_beds));
 
@@ -170,22 +229,39 @@ public class ShelterDetailActivity extends AppCompatActivity {
                 final NumberPicker np = (NumberPicker) d.findViewById(R.id.reservation_picker);
                 np.setMinValue(1);
                 np.clearFocus();
-//              Causes crash, see Shelter
-//                np.setMaxValue(shelter.getVacancyNum());
-                np.setMaxValue(20);
+                np.setMaxValue(vacancyNum);
                 np.setWrapSelectorWheel(false);
-//              Debug
-                np.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
-                    @Override
-                    public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
-                        Log.i("Reservation", "New num: " + newVal);
-                    }
-                });
                 btn_ok.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        // TODO: 3/27/18 Create reservation in DB, possibly conformation toast/ dialog, reload screen on complete
                         d.dismiss();
+                        btnLoading();
+                        final Handler handler = new Handler();
+                        new Thread() {
+                            @Override
+                            public void run() {
+                                Reservation res = new Reservation(userInfo.getUid(), shelter.getUID(), np.getValue());
+                                FirebaseDBManager.insertNewReservation(res);
+                                userInfo.setCurrentReservation(res.getReservationID());
+                                FirebaseDBManager.setUserInfo(userInfo);
+                                ArrayList<String> resIDs = shelter.getReservationIDs();
+                                if (resIDs == null) {
+                                    resIDs = new ArrayList<>();
+                                }
+                                resIDs.add(res.getReservationID());
+                                shelter.setReservationIDs(resIDs);
+                                FirebaseDBManager.updateShelterInfo(shelter);
+                                vacancyNum = shelter.getVacancyNum();
+                                capacityView.setText(getResources().getString(R.string.shelter_capacity, shelter.getCapacityStr(), vacancyNum));
+                                handler.post(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        btnRes();
+                                    }
+                                });
+                            }
+                        }.start();
+
                     }
                 });
                 btn_cancel.setOnClickListener(new View.OnClickListener() {
@@ -199,6 +275,4 @@ public class ShelterDetailActivity extends AppCompatActivity {
             }
         });
     }
-    
-    private Button resButton;
 }
