@@ -20,6 +20,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -30,6 +31,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import edu.gatech.spacebarz.buzzshelter.model.Shelter;
+import edu.gatech.spacebarz.buzzshelter.model.UserInfo;
 import edu.gatech.spacebarz.buzzshelter.util.FirebaseAuthManager;
 import edu.gatech.spacebarz.buzzshelter.util.FirebaseDBManager;
 
@@ -82,12 +84,24 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
     }
 
     private void loadShelters(Handler handler) {
+        UserInfo curUser = FirebaseDBManager.retrieveCurrentUserInfo();
+        String resShelter = null;
+        if (curUser != null && curUser.getCurrentReservation() != null)
+            resShelter = FirebaseDBManager.retrieveReservation(curUser.getCurrentReservation()).getShelterID();
+
         shelters = FirebaseDBManager.retrieveAllShelters();
         for (final Shelter shelter : shelters) {
             final MarkerOptions opts = new MarkerOptions();
             opts.position(new LatLng(shelter.getLat(), shelter.getLon()));
             opts.title(shelter.getName());
             opts.snippet(shelter.getName());
+
+            if (shelter.getVacancyNum() == 0)
+                opts.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE));
+
+            if (resShelter != null && resShelter.equals(shelter.getUID()))
+                opts.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
+
             handler.post(new Runnable() {
                 @Override
                 public void run() {
