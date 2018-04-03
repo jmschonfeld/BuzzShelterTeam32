@@ -1,10 +1,15 @@
 package edu.gatech.spacebarz.buzzshelter;
 
 import android.app.PendingIntent;
+import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Camera;
 import android.location.Location;
 import android.location.LocationManager;
 import android.location.LocationProvider;
+import android.os.Build;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
@@ -19,18 +24,28 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 
 import java.security.Security;
+import java.util.HashMap;
+import java.util.Map;
+
+import edu.gatech.spacebarz.buzzshelter.model.Shelter;
+import edu.gatech.spacebarz.buzzshelter.util.FirebaseDBManager;
 
 public class MapActivity extends FragmentActivity implements OnMapReadyCallback {
 
     private GoogleMap map;
     private FusedLocationProviderClient locationProvider;
     private static final int PERMISSIONS_REQUEST_LOCATION = 0470;
+    private Shelter[] shelters;
+    private Map<String, String> markerToShelter = new HashMap<String, String>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,6 +78,45 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
         }
 
         loadLocation();
+        final Handler handler = new Handler();
+        new Thread() {
+            @Override
+            public void run() {
+                loadShelters(handler);
+            }
+        }.start();
+    }
+
+    private void loadShelters(Handler handler) {
+        shelters = FirebaseDBManager.retrieveAllShelters();
+        for (final Shelter shelter : shelters) {
+            final MarkerOptions opts = new MarkerOptions();
+            opts.position(new LatLng(shelter.getLat(), shelter.getLon()));
+            opts.title(shelter.getName());
+            opts.snippet(shelter.getName());
+            handler.post(new Runnable() {
+                @Override
+                public void run() {
+                    Marker mark = map.addMarker(opts);
+                    markerToShelter.put(mark.getId(), shelter.getUID());
+                }
+            });
+        }
+        final Context context = this;
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+               map.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+                   @Override
+                   public boolean onMarkerClick(Marker marker) {
+                       Intent intent = new Intent(context, ShelterDetailActivity.class);
+                       intent.putExtra("shelterUID", markerToShelter.get(marker.getId()));
+                       startActivity(intent);
+                       return true;
+                   }
+               });
+            }
+        });
     }
 
     private void loadLocation() throws SecurityException {
@@ -70,7 +124,14 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
             @Override
             public void onSuccess(Location location) {
                 Log.i("Location", "Received Location: " + location);
-                map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(), location.getLongitude()), 18));
+                LatLng latlng = null;
+                if (Build.FINGERPRINT.contains("generic")) {
+                    latlng = new LatLng(33.7776210, -84.4048150);
+                } else {
+                    latlng = new LatLng(location.getLatitude(), location.getLongitude());
+                }
+                map.moveCamera(CameraUpdateFactory.newLatLngZoom(latlng, 17));
+
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
@@ -78,6 +139,8 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
                 e.printStackTrace();
             }
         });
+
+        map.setMyLocationEnabled(true);
     }
 
     @Override
