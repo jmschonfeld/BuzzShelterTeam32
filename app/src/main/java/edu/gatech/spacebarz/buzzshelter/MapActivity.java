@@ -96,11 +96,13 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
             opts.title(shelter.getName());
             opts.snippet(shelter.getName());
 
-            if (shelter.getVacancyNum() == 0)
-                opts.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE));
-
-            if (resShelter != null && resShelter.equals(shelter.getUID()))
+            if (resShelter != null && resShelter.equals(shelter.getUID())) {
+                opts.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE));
+            } else if (shelter.getVacancyNum() == 0) {
+                opts.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
+            } else {
                 opts.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
+            }
 
             handler.post(new Runnable() {
                 @Override
