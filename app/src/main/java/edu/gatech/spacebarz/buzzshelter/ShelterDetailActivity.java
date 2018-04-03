@@ -189,7 +189,10 @@ public class ShelterDetailActivity extends AppCompatActivity {
                             @Override
                             public void run() {
                                 Toast.makeText(getApplicationContext(), R.string.toast_reservation_canceled, Toast.LENGTH_LONG).show();
-                                btnNoRes();
+                                if (shelter.getCapacityNum() == -1)
+                                    btnCallRes();
+                                else
+                                    btnNoRes();
                             }
                         });
                     }

@@ -7,7 +7,6 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -15,8 +14,8 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import edu.gatech.spacebarz.buzzshelter.util.FirebaseAuthManager;
 import edu.gatech.spacebarz.buzzshelter.model.Shelter;
+import edu.gatech.spacebarz.buzzshelter.util.FirebaseAuthManager;
 import edu.gatech.spacebarz.buzzshelter.util.ShelterListAdapter;
 import edu.gatech.spacebarz.buzzshelter.util.ShelterListAdapter.ShelterFilter;
 
@@ -28,13 +27,6 @@ public class ShelterListActivity extends AppCompatActivity {
     private ProgressBar progressBar;
     private ShelterListAdapter listAdapter;
     private TextView noDataView;
-
-    @Override
-    public void finish() {
-        super.finish();
-        FirebaseAuthManager.signout();
-        Toast.makeText(getApplicationContext(), R.string.toast_logged_out, Toast.LENGTH_SHORT).show();
-    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -113,6 +105,4 @@ public class ShelterListActivity extends AppCompatActivity {
         });
 
     }
-
-
 }
