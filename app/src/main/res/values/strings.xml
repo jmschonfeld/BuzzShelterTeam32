@@ -21,6 +21,7 @@
     <string name="title_activity_register">Register</string>
     <string name="toast_account_created">Account created</string>
     <string name="toast_reservation_canceled">Reservation canceled</string>
+    <string name="toast_reservation_created">Reservation created</string>
 
     <!-- Strings related to registration -->
     <string name="registration_name">Name</string>
@@ -47,8 +48,14 @@
     <string name="shelter_reserve">Reserve space</string>
     <string name="shelter_no_vacancies">No vacancy</string>
     <string name="shelter_cancel">Cancel reservation</string>
-    <string name="shelter_res_beds">Select number of beds</string>
-    <string name="shelter_res_loading">Loading...</string>
+    <string name="shelter_res_loading">Loading…</string>
+    <string name="shelter_res_call">Please call to reserve space</string>
+    <string name="shelter_res_other">Space already reserved at another shelter</string>
+
+    <!-- Bed Selector Strings -->
+    <string name="selector_beds">Select number of beds</string>
+    <string name="selector_okay">Okay</string>
+    <string name="selector_cancel">Cancel</string>
 
     <!-- Shelter Filter Strings -->
     <string name="title_activity_shelter_filter">Filter Shelters</string>

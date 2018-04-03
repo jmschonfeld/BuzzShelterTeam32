@@ -2,18 +2,12 @@ package edu.gatech.spacebarz.buzzshelter;
 
 import android.app.Dialog;
 import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
+import android.os.Bundle;
 import android.os.Handler;
 import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.Snackbar;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-import android.text.Layout;
-import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -22,14 +16,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 
 import edu.gatech.spacebarz.buzzshelter.model.Reservation;
-import edu.gatech.spacebarz.buzzshelter.model.UserInfo;
-import edu.gatech.spacebarz.buzzshelter.util.FirebaseAuthManager;
-import edu.gatech.spacebarz.buzzshelter.util.FirebaseDBManager;
 import edu.gatech.spacebarz.buzzshelter.model.Shelter;
+import edu.gatech.spacebarz.buzzshelter.model.UserInfo;
+import edu.gatech.spacebarz.buzzshelter.util.FirebaseDBManager;
 
 public class ShelterDetailActivity extends AppCompatActivity {
 
@@ -128,13 +119,19 @@ public class ShelterDetailActivity extends AppCompatActivity {
         Button directionsButton = findViewById(R.id.shelter_directions);
         resButton = findViewById(R.id.shelter_reservation_button);
 
-        if (userReservation != null && userReservation.getShelterID().equals(shelter.getUID())) {
-            btnRes();
+        if (userReservation != null) {
+            if (userReservation.getShelterID().equals(shelter.getUID()))
+                btnRes();
+            else
+                btnOthRes();
         } else {
-            if (vacancyNum == 0) {
-                btnNoVac();
-            } else {
-                btnNoRes();
+            if (vacancyNum == -1)
+                btnCallRes();
+            else {
+                if (vacancyNum != 0)
+                    btnNoRes();
+                else
+                    btnNoVac();
             }
         }
 
@@ -190,6 +187,7 @@ public class ShelterDetailActivity extends AppCompatActivity {
                         handler.post(new Runnable() {
                             @Override
                             public void run() {
+                                Toast.makeText(getApplicationContext(), R.string.toast_reservation_canceled, Toast.LENGTH_LONG).show();
                                 btnNoRes();
                             }
                         });
@@ -201,6 +199,16 @@ public class ShelterDetailActivity extends AppCompatActivity {
 
     private void btnNoVac() {
         resButton.setText(getResources().getString(R.string.shelter_no_vacancies));
+        resButton.setEnabled(false);
+    }
+
+    private void btnCallRes() {
+        resButton.setText(getResources().getString(R.string.shelter_res_call));
+        resButton.setEnabled(false);
+    }
+
+    private void btnOthRes() {
+        resButton.setText(getResources().getString(R.string.shelter_res_other));
         resButton.setEnabled(false);
     }
 
@@ -218,7 +226,7 @@ public class ShelterDetailActivity extends AppCompatActivity {
 
                 // Show picker dialog
                 final Dialog d = new Dialog(ShelterDetailActivity.this);
-                d.setTitle(getResources().getString(R.string.shelter_res_beds));
+                d.setTitle(getResources().getString(R.string.selector_beds));
 
 //              Need to find a better bgcolor for dialog
 //                d.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
@@ -226,7 +234,7 @@ public class ShelterDetailActivity extends AppCompatActivity {
                 d.setContentView(R.layout.dialog_reservation_beds);
                 Button btn_ok = d.findViewById(R.id.reservation_okay);
                 Button btn_cancel = d.findViewById(R.id.reservation_cancel);
-                final NumberPicker np = (NumberPicker) d.findViewById(R.id.reservation_picker);
+                final NumberPicker np = d.findViewById(R.id.reservation_picker);
                 np.setMinValue(1);
                 np.clearFocus();
                 np.setMaxValue(vacancyNum);
@@ -256,6 +264,7 @@ public class ShelterDetailActivity extends AppCompatActivity {
                                 handler.post(new Runnable() {
                                     @Override
                                     public void run() {
+                                        Toast.makeText(getApplicationContext(), R.string.toast_reservation_created, Toast.LENGTH_LONG).show();
                                         btnRes();
                                     }
                                 });
