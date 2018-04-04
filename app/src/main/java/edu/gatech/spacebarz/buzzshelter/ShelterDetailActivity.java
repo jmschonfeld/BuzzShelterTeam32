@@ -119,19 +119,20 @@ public class ShelterDetailActivity extends AppCompatActivity {
         Button directionsButton = findViewById(R.id.shelter_directions);
         resButton = findViewById(R.id.shelter_reservation_button);
 
-        if (userReservation != null) {
-            if (userReservation.getShelterID().equals(shelter.getUID()))
+
+        if (vacancyNum == -1) {
+            btnCallRes();
+        } else if (userReservation != null) {
+            if (userReservation.getShelterID().equals(shelter.getUID())) {
                 btnRes();
-            else
+            } else {
                 btnOthRes();
+            }
         } else {
-            if (vacancyNum == -1)
-                btnCallRes();
-            else {
-                if (vacancyNum != 0)
-                    btnNoRes();
-                else
-                    btnNoVac();
+            if (vacancyNum != 0) {
+                btnNoRes();
+            } else {
+                btnNoVac();
             }
         }
 
@@ -188,7 +189,10 @@ public class ShelterDetailActivity extends AppCompatActivity {
                             @Override
                             public void run() {
                                 Toast.makeText(getApplicationContext(), R.string.toast_reservation_canceled, Toast.LENGTH_LONG).show();
-                                btnNoRes();
+                                if (shelter.getCapacityNum() == -1)
+                                    btnCallRes();
+                                else
+                                    btnNoRes();
                             }
                         });
                     }

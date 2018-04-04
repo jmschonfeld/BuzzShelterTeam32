@@ -15,21 +15,21 @@
       },
       "oauth_client": [
         {
-          "client_id": "537383737030-e7fosah3r5adnjr13mjvmbden2bav53g.apps.googleusercontent.com",
+          "client_id": "537383737030-61739rggsv7aflr3cvsj9a8u2i3brc90.apps.googleusercontent.com",
+          "client_type": 3
+        },
+        {
+          "client_id": "537383737030-rn7cuv1nj858srrkompu6ogrirl3ohgr.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "edu.gatech.spacebarz.buzzshelter",
             "certificate_hash": "b51ad6d0a2a599eacec4ce903b9b823184935cf3"
           }
-        },
-        {
-          "client_id": "537383737030-ftnsqt72rh4ihmf5bk4p1ni4lnh2uivo.apps.googleusercontent.com",
-          "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyBK2vVGDRJCR0RfO_ZBVTyo7Im_Zp5TLys"
+          "current_key": "AIzaSyAFvAyh9Pj_HISIYIjDv9m398qWAg_Ztbk"
         }
       ],
       "services": {
@@ -40,7 +40,7 @@
           "status": 2,
           "other_platform_oauth_client": [
             {
-              "client_id": "537383737030-ftnsqt72rh4ihmf5bk4p1ni4lnh2uivo.apps.googleusercontent.com",
+              "client_id": "537383737030-61739rggsv7aflr3cvsj9a8u2i3brc90.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

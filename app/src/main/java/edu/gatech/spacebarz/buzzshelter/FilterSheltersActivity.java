@@ -1,15 +1,19 @@
 package edu.gatech.spacebarz.buzzshelter;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import edu.gatech.spacebarz.buzzshelter.util.CustomShelterFilter;
@@ -56,6 +60,15 @@ public class FilterSheltersActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 nameFilter.setCursorVisible(true);
+            }
+        });
+        final Context context = this;
+        nameFilter.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if ((event != null && (event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) || (actionId == EditorInfo.IME_ACTION_DONE)) {
+                    UIUtil.closeSoftKeyboard(nameFilter, context);
+                }
+                return false;
             }
         });
 
