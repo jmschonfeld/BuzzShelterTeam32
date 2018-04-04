@@ -169,6 +169,19 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
     }
 
     @Override
+    public void onRestart() {
+        final Handler handler = new Handler();
+        new Thread() {
+            @Override
+            public void run() {
+                loadShelters(handler);
+            }
+        }.start();
+
+        super.onRestart();
+    }
+
+    @Override
     public void finish() {
         FirebaseAuthManager.signout();
         Toast.makeText(getApplicationContext(), R.string.toast_logged_out, Toast.LENGTH_SHORT).show();
