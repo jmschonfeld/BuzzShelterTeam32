@@ -112,8 +112,6 @@ public class FilterSheltersActivity extends AppCompatActivity {
         final boolean ageAll = ageAllRadio.isChecked();
         final boolean veteran = veteranBox.isChecked();
 
-        ShelterFilter filter = new CustomShelterFilter(nameText, genderMale, genderFemale, genderAll, ageNewborn, ageChild, ageYA, ageAll, veteran);
-
         if (!genderMale && !genderFemale && !genderAll) {
             Toast.makeText(this, "You must select a gender", Toast.LENGTH_LONG).show();
             return;
@@ -124,7 +122,7 @@ public class FilterSheltersActivity extends AppCompatActivity {
         }
 
         Intent intent = new Intent();
-        intent.putExtra("filter", filter);
+        intent.putExtra("filter", new CustomShelterFilter(nameText, genderMale, genderFemale, genderAll, ageNewborn, ageChild, ageYA, ageAll, veteran););
         finishedFilter = true;
         setResult(RESULT_OK, intent);
         finish();

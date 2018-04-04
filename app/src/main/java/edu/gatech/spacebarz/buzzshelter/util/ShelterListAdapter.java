@@ -15,6 +15,7 @@ import android.widget.TextView;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.List;
 
 import edu.gatech.spacebarz.buzzshelter.R;
 import edu.gatech.spacebarz.buzzshelter.model.Shelter;
@@ -40,7 +41,7 @@ public class ShelterListAdapter extends ArrayAdapter<Shelter> {
     }
 
     /** Creates a list adapter for the given list of shelters */
-    public ShelterListAdapter(Context context, ArrayList<Shelter> shelters) {
+    public ShelterListAdapter(Context context, List<Shelter> shelters) {
         super(context, R.layout.item_shelter_list, shelters);
     }
 
