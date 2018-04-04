@@ -39,7 +39,8 @@
         <activity
             android:name=".ShelterDetailActivity"
             android:label="@string/title_activity_shelter_detail"
-            android:parentActivityName=".ShelterListActivity" />
+            android:parentActivityName=".ShelterListActivity"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".FilterSheltersActivity"
             android:label="@string/title_activity_shelter_filter" />
@@ -58,7 +59,8 @@
         <activity
             android:name=".MapActivity"
             android:label="@string/title_activity_map"
-            android:parentActivityName=".LoginActivity" />
+            android:parentActivityName=".LoginActivity"
+            android:screenOrientation="portrait"/>
     </application>
 
 </manifest>
