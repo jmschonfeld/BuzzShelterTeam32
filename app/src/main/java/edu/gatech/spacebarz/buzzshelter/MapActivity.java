@@ -89,8 +89,10 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
                         }
                     }.start();
                     snack.dismiss();
+                    fab.setVisibility(View.VISIBLE);
                 }
             });
+            fab.setVisibility(View.GONE);
             snack.show();
         }
     }
