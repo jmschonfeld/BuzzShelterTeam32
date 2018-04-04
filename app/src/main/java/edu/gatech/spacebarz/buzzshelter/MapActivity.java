@@ -8,10 +8,12 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
+import android.view.View;
 import android.widget.Toast;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -32,16 +34,22 @@ import java.util.Map;
 
 import edu.gatech.spacebarz.buzzshelter.model.Shelter;
 import edu.gatech.spacebarz.buzzshelter.model.UserInfo;
+import edu.gatech.spacebarz.buzzshelter.util.CustomShelterFilter;
 import edu.gatech.spacebarz.buzzshelter.util.FirebaseAuthManager;
 import edu.gatech.spacebarz.buzzshelter.util.FirebaseDBManager;
 
 public class MapActivity extends FragmentActivity implements OnMapReadyCallback {
 
+    private static final int FILTER_MAP_RETURN_REQUEST_CODE = 1002;
+
     private GoogleMap map;
+    private FloatingActionButton fab;
     private FusedLocationProviderClient locationProvider;
     private static final int PERMISSIONS_REQUEST_LOCATION = 0470;
     private Shelter[] shelters;
+    private CustomShelterFilter filter;
     private Map<String, String> markerToShelter = new HashMap<String, String>();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +59,22 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+
+        fab = findViewById(R.id.filter_fab);
+        final Context c = this;
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(c, FilterSheltersActivity.class);
+                startActivityForResult(i, FILTER_MAP_RETURN_REQUEST_CODE);
+            }
+        });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == FILTER_MAP_RETURN_REQUEST_CODE && resultCode == RESULT_OK && data.hasExtra("filter"))
+            filter = (CustomShelterFilter) data.getSerializableExtra("filter");
     }
 
 
@@ -84,6 +108,14 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
     }
 
     private void loadShelters(Handler handler) {
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                map.clear();
+                markerToShelter.clear();
+            }
+        });
+
         UserInfo curUser = FirebaseDBManager.retrieveCurrentUserInfo();
         String resShelter = null;
         if (curUser != null && curUser.getCurrentReservation() != null)
@@ -91,6 +123,9 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
 
         shelters = FirebaseDBManager.retrieveAllShelters();
         for (final Shelter shelter : shelters) {
+            if (filter != null && !filter.filter(shelter) && (resShelter == null || !resShelter.equals(shelter.getUID())))
+                continue;
+
             final MarkerOptions opts = new MarkerOptions();
             opts.position(new LatLng(shelter.getLat(), shelter.getLon()));
             opts.title(shelter.getName());
@@ -159,9 +194,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
             case PERMISSIONS_REQUEST_LOCATION: {
                 // If request is cancelled, the result arrays are empty.
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-
                     loadLocation();
-
                 }
                 break;
             }
