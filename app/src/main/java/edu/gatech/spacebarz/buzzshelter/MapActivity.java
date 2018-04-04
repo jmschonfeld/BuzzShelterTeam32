@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
@@ -73,8 +74,25 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == FILTER_MAP_RETURN_REQUEST_CODE && resultCode == RESULT_OK && data.hasExtra("filter"))
+        if (requestCode == FILTER_MAP_RETURN_REQUEST_CODE && resultCode == RESULT_OK && data.hasExtra("filter")) {
             filter = (CustomShelterFilter) data.getSerializableExtra("filter");
+            final Snackbar snack = Snackbar.make(findViewById(android.R.id.content), "Filtered shelters", Snackbar.LENGTH_INDEFINITE);
+            snack.setAction("View All Shelters", new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    filter = null;
+                    final Handler handler = new Handler();
+                    new Thread() {
+                        @Override
+                        public void run() {
+                            loadShelters(handler);
+                        }
+                    }.start();
+                    snack.dismiss();
+                }
+            });
+            snack.show();
+        }
     }
 
 
