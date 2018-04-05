@@ -11,6 +11,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
-        android:text="Logout"
+        android:text="@string/logout_button_title"
         />
 </android.support.constraint.ConstraintLayout>

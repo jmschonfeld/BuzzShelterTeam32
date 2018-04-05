@@ -8,8 +8,9 @@ public class UIUtil {
     public static void closeSoftKeyboard(View v, Context c) {
         if (v != null) {
             InputMethodManager im = (InputMethodManager) c.getSystemService(Context.INPUT_METHOD_SERVICE);
-            if (im != null)
+            if (im != null) {
                 im.hideSoftInputFromWindow(v.getWindowToken(), 0);
+            }
         }
     }
 }

@@ -49,9 +49,8 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
     private FloatingActionButton fab;
     private FusedLocationProviderClient locationProvider;
     private static final int PERMISSIONS_REQUEST_LOCATION = 0470;
-    private Shelter[] shelters;
     private CustomShelterFilter filter;
-    private Map<String, String> markerToShelter = new HashMap<>();
+    private final Map<String, String> markerToShelter = new HashMap<>();
 
 
     @Override
@@ -140,13 +139,15 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
 
         UserInfo curUser = FirebaseDBManager.retrieveCurrentUserInfo();
         String resShelter = null;
-        if (curUser != null && curUser.getCurrentReservation() != null)
+        if (curUser != null && curUser.getCurrentReservation() != null) {
             resShelter = FirebaseDBManager.retrieveReservation(curUser.getCurrentReservation()).getShelterID();
+        }
 
-        shelters = FirebaseDBManager.retrieveAllShelters();
+        Shelter[] shelters = FirebaseDBManager.retrieveAllShelters();
         for (final Shelter shelter : shelters) {
-            if (filter != null && !filter.filter(shelter) && (resShelter == null || !resShelter.equals(shelter.getUID())))
+            if (filter != null && !filter.filter(shelter) && (resShelter == null || !resShelter.equals(shelter.getUID()))) {
                 continue;
+            }
 
             final MarkerOptions opts = new MarkerOptions();
             opts.position(new LatLng(shelter.getLat(), shelter.getLon()));

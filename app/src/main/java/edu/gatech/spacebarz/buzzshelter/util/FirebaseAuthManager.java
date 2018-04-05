@@ -44,8 +44,9 @@ public class FirebaseAuthManager {
                                 completion.callback(true, null);
                             }
                         } else {
-                            if (task.getException() != null)
+                            if (task.getException() != null) {
                                 Log.i("authFeedback",task.getException().getMessage());
+                            }
                             if (completion != null) {
                                 completion.callback(false, task.getException());
                             }
@@ -87,32 +88,36 @@ public class FirebaseAuthManager {
 
     @Nullable
     public static String getUserDisplayName() {
-        if (auth.getCurrentUser() == null)
+        if (auth.getCurrentUser() == null) {
             return null;
+        }
 
         return auth.getCurrentUser().getDisplayName();
     }
 
     @Nullable
     public static String getUserEmail() {
-        if (auth.getCurrentUser() == null)
+        if (auth.getCurrentUser() == null) {
             return null;
+        }
 
         return auth.getCurrentUser().getEmail();
     }
 
     @Nullable
     public static String getUserPhone() {
-        if (auth.getCurrentUser() == null)
+        if (auth.getCurrentUser() == null) {
             return null;
+        }
 
         return auth.getCurrentUser().getPhoneNumber();
     }
 
     @Nullable
     public static String getUserID() {
-        if (auth.getCurrentUser() == null)
+        if (auth.getCurrentUser() == null) {
             return null;
+        }
 
         return auth.getCurrentUser().getUid();
     }
