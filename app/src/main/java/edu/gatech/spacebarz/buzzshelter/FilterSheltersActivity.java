@@ -19,7 +19,7 @@ import android.widget.Toast;
 import edu.gatech.spacebarz.buzzshelter.util.CustomShelterFilter;
 import edu.gatech.spacebarz.buzzshelter.util.UIUtil;
 
-public class wwFilterSheltersActivity extends AppCompatActivity {
+public class FilterSheltersActivity extends AppCompatActivity {
 
     private boolean finishedFilter = false;
 
