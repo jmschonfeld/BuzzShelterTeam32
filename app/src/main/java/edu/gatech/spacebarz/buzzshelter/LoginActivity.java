@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
@@ -21,6 +22,8 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 import com.google.firebase.auth.FirebaseAuthInvalidUserException;
 
@@ -75,6 +78,21 @@ public class LoginActivity extends AppCompatActivity {
             public void onClick(View view) {
                 clearFields();
                 moveToRegisterActivity();
+            }
+        });
+
+        Button recoveryButton = findViewById(R.id.recovery_button);
+        final Context context = this;
+        recoveryButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (loginView.getText().toString().equals("")) {
+                    loginView.setError("Email address is required");
+                    return;
+                }
+                Log.i("FirebaseAuth", "Sending recovery email...");
+                FirebaseAuthManager.sendRecoveryEmail(loginView.getText().toString());
+                Toast.makeText(context, "Recovery email sent!", Toast.LENGTH_SHORT).show();
             }
         });
 
