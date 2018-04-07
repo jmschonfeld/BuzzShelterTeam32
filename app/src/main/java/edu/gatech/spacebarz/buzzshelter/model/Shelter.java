@@ -132,6 +132,11 @@ public class Shelter implements Serializable {
         this.reservationIDs = reservationIDs;
     }
 
+    @Override
+    public String toString() {
+        return "Shelter-" + this.uid;
+    }
+
     public int getVacancyNum() {
         int vac = capacityNum;
 
