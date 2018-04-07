@@ -23,9 +23,7 @@ public class CustomShelterFilter extends ShelterListAdapter.ShelterFilter {
 
 
     public boolean filter(Shelter shelter) {
-        Log.i("CustomShelterFilter", "Comparison Name = " + nameText.trim().toLowerCase() + " | Checking Name = " + shelter.getName().toLowerCase() + " | b1=" + !nameText.trim().equals("") + " | b2=" + !shelter.getName().toLowerCase().contains(nameText.trim().toLowerCase()));
         if (!nameText.trim().equals("") && !shelter.getName().toLowerCase().contains(nameText.trim().toLowerCase())) {
-            Log.i("CustomShelterFilter", "Returning false");
             return false;
         }
 
@@ -50,7 +48,6 @@ public class CustomShelterFilter extends ShelterListAdapter.ShelterFilter {
             return false;
         }
 
-        Log.i("CustomShelterFilter", "Returning true");
         return true;
     }
 }
