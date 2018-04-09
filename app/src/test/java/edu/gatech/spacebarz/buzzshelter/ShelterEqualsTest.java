@@ -41,10 +41,8 @@ public class ShelterEqualsTest {
         assertFalse(nullShelter.equals(shelter1));
         assertFalse(shelter1.equals(shelter2));
         assertFalse(nullShelter.equals(shelter2));
+        assertFalse(nullShelter.equals(new Object()));
     }
-
-
-
 
     @Test
     public void testShelterEqualsDifferentVarSameContent() {
