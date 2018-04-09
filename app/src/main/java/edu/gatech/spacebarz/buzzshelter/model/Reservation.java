@@ -5,11 +5,10 @@ public class Reservation {
     /** Required for firebase, should not be used by the actual app */
     public Reservation() {}
 
-    public Reservation(String cID, String sID, int s, String resID) {
+    public Reservation(String cID, String sID, int s) {
         creatorID = cID;
         shelterID = sID;
         size = s;
-        reservationID = resID;
     }
 
     public String getCreatorID() {
