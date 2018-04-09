@@ -6,9 +6,9 @@ public class Reservation {
     public Reservation() {}
 
     public Reservation(String cID, String sID, int s) {
-        setCreatorID(cID);
-        setShelterID(sID);
-        setSize(s);
+        creatorID = cID;
+        shelterID = sID;
+        size = s;
     }
 
     public String getCreatorID() {
