@@ -14,6 +14,7 @@
     <string name="error_invalid_password">This password is too short</string>
     <string name="permission_rationale">"Contacts permissions are needed for providing email completions."</string>
     <string name="logout_button_title">Logout</string>
+    <string name="login_recovery_button_title">Forgot Password</string>
 
     <!-- Toast texts -->
     <string name="toast_to_be_implemented">This will be implemented in a later milestone</string>

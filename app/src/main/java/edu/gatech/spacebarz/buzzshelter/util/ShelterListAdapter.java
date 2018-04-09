@@ -43,6 +43,7 @@ public class ShelterListAdapter extends ArrayAdapter<Shelter> {
     /** Creates a list adapter for the given list of shelters */
     public ShelterListAdapter(Context context, List<Shelter> shelters) {
         super(context, R.layout.item_shelter_list, shelters);
+        fullData = shelters.toArray(new Shelter[shelters.size()]);
     }
 
     /** Fetches remote shelters through the fetching callback and adds them to the adapter */

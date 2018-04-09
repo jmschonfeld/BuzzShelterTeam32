@@ -10,15 +10,6 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="edu.gatech.spacebarz.buzzshelter.LoginActivity">
 
-    <!-- Login progress -->
-    <ProgressBar
-        android:id="@+id/login_progress"
-        style="?android:attr/progressBarStyleLarge"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:visibility="gone" />
-
     <ScrollView
         android:id="@+id/scroll_login_form"
         android:layout_width="match_parent"
@@ -91,16 +82,23 @@
 
             </LinearLayout>
 
+            <Button
+                android:id="@+id/recovery_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/login_recovery_button_title"
+                android:layout_gravity="center_horizontal"/>
+
             <ProgressBar
                 android:id="@+id/login_progressBar"
                 style="?android:attr/progressBarStyleHorizontal"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:indeterminate="true"
-                android:max="100"
+                android:layout_marginTop="8dp"
                 android:backgroundTint="#fafafa"
+                android:indeterminate="true"
                 android:indeterminateTint="#1a09d6"
-                android:layout_marginTop="8dp"/>
+                android:max="100" />
         </LinearLayout>
     </ScrollView>
 </LinearLayout>

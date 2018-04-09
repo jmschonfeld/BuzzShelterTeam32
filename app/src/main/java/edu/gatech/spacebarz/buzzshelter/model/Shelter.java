@@ -32,11 +32,17 @@ public class Shelter implements Serializable {
 
     @Override
     public boolean equals(Object o) {
-        if (o.getClass() != Shelter.class) {
+        if (o == null) {
+            return false;
+        } else if (o.getClass() != Shelter.class) {
             return false;
         }
 
         Shelter temp = (Shelter) o;
+
+        if (temp.getUID() == null) {
+            return uid == null;
+        }
 
         return temp.getUID().equals(uid);
     }
@@ -131,6 +137,11 @@ public class Shelter implements Serializable {
     }
     public void setReservationIDs(ArrayList<String> reservationIDs) {
         this.reservationIDs = reservationIDs;
+    }
+
+    @Override
+    public String toString() {
+        return "Shelter-" + this.uid;
     }
 
     public int getVacancyNum() {
