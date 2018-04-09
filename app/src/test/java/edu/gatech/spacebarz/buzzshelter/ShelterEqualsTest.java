@@ -44,6 +44,8 @@ public class ShelterEqualsTest {
     }
 
 
+
+
     @Test
     public void testShelterEqualsDifferentVarSameContent() {
         assertTrue(nullShelter.equals(new Shelter()));
