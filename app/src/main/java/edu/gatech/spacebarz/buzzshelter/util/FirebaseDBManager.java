@@ -113,9 +113,9 @@ public class FirebaseDBManager {
         return myRef.push().getKey();
     }
 
-    private static class DeleteObjectSynchronousTask<T> {
+    private static final class DeleteObjectSynchronousTask<T> {
 
-        private String key;
+        private final String key;
         private DatabaseError error;
 
         private DeleteObjectSynchronousTask(DatabaseKey dbKey, String id) {
@@ -149,9 +149,9 @@ public class FirebaseDBManager {
 
     }
 
-    private static class StoreObjectSynchronousTask<T> {
+    private static final class StoreObjectSynchronousTask<T> {
 
-        private String key;
+        private final String key;
         private DatabaseError error;
 
         private StoreObjectSynchronousTask(DatabaseKey dbKey, String id) {
@@ -185,9 +185,9 @@ public class FirebaseDBManager {
 
     }
 
-    private static class RetrieveObjectListSynchronousTask<T> {
-        private String key;
-        private Class<T> type;
+    private static final class RetrieveObjectListSynchronousTask<T> {
+        private final String key;
+        private final Class<T> type;
         private T[] values;
         private DatabaseError error;
 
@@ -236,10 +236,10 @@ public class FirebaseDBManager {
         }
     }
 
-    private static class RetrieveObjectSynchronousTask<T> {
+    private static final class RetrieveObjectSynchronousTask<T> {
 
-        private String key;
-        private Class<T> type;
+        private final String key;
+        private final Class<T> type;
         private T value;
         private DatabaseError error;
 
@@ -287,7 +287,7 @@ public class FirebaseDBManager {
     private enum DatabaseKey {
         USER("SSUser"), SHELTER("SSShelter"), RESERVATION("SSReservation");
 
-        private String key;
+        private final String key;
         DatabaseKey(String k) {
             key = k;
         }

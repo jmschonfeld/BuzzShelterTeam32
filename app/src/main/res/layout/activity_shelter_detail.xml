@@ -24,7 +24,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/activity_horizontal_margin"
             android:layout_marginRight="@dimen/activity_horizontal_margin"
-            android:text="Shelter Name"
+            android:text="@string/shelter_name_default"
             android:textSize="26dp"
             android:textStyle="bold" />
 
@@ -34,7 +34,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/activity_horizontal_margin"
             android:layout_marginRight="@dimen/activity_horizontal_margin"
-            android:text="Address"
+            android:text="@string/shelter_address_default"
             android:textSize="16dp"
             android:textStyle="italic" />
 
@@ -44,7 +44,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/activity_horizontal_margin"
             android:layout_marginRight="@dimen/activity_horizontal_margin"
-            android:text="Phone Number"
+            android:text="@string/shelter_phone_default"
             android:textSize="16dp"
             android:textStyle="italic" />
 
@@ -58,7 +58,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/activity_horizontal_margin"
             android:layout_marginRight="@dimen/activity_horizontal_margin"
-            android:text="Capacity"
+            android:text="@string/shelter_capacity"
             android:textSize="16dp" />
 
         <TextView
@@ -67,7 +67,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/activity_horizontal_margin"
             android:layout_marginRight="@dimen/activity_horizontal_margin"
-            android:text="Restrictions"
+            android:text="@string/shelter_restrictions"
             android:textSize="16dp" />
 
         <TextView
@@ -76,7 +76,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/activity_horizontal_margin"
             android:layout_marginRight="@dimen/activity_horizontal_margin"
-            android:text="Gender"
+            android:text="@string/shelter_gender"
             android:textSize="16dp" />
 
         <TextView
@@ -85,7 +85,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/activity_horizontal_margin"
             android:layout_marginRight="@dimen/activity_horizontal_margin"
-            android:text="Notes"
+            android:text="@string/shelter_notes"
             android:textSize="16dp" />
 
         <Space
@@ -116,7 +116,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Call" />
+                android:text="@string/shelter_button_call" />
 
             <Space
                 android:layout_width="1sp"
@@ -128,7 +128,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Directions" />
+                android:text="@string/shelter_button_directions" />
 
             <Space
                 android:layout_width="1sp"

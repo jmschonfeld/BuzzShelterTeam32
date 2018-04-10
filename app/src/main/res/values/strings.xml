@@ -13,6 +13,7 @@
     <string name="error_invalid_email">This email address is invalid</string>
     <string name="error_invalid_password">This password is too short</string>
     <string name="permission_rationale">"Contacts permissions are needed for providing email completions."</string>
+    <string name="logout_button_title">Logout</string>
     <string name="login_recovery_button_title">Forgot Password</string>
 
     <!-- Toast texts -->
@@ -42,6 +43,9 @@
 
     <!-- Shelter Detail Strings -->
     <string name="title_activity_shelter_detail">Shelter Details</string>
+    <string name="shelter_name_default">Shelter Name</string>
+    <string name="shelter_address_default">Shelter Address</string>
+    <string name="shelter_phone_default">Phone Number</string>
     <string name="shelter_capacity">Capacity: %1$s (%2$d vacancies)</string>
     <string name="shelter_gender">Gender: %1$s</string>
     <string name="shelter_restrictions">Restrictions: %1$s</string>
@@ -52,6 +56,8 @@
     <string name="shelter_res_loading">Loading…</string>
     <string name="shelter_res_call">Please call to reserve space</string>
     <string name="shelter_res_other">Space already reserved at another shelter</string>
+    <string name="shelter_button_call">Call</string>
+    <string name="shelter_button_directions">Directions</string>
 
     <!-- Bed Selector Strings -->
     <string name="selector_beds">Select number of beds</string>

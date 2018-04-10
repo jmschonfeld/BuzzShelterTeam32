@@ -62,7 +62,7 @@ public class UserInfo {
         UserRole(String s) {
             label = s;
         }
-        private String label;
+        private final String label;
 
         @Override
         public String toString() {

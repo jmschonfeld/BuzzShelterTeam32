@@ -30,13 +30,15 @@
             android:id="@+id/reservation_cancel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/selector_cancel" />
+            android:text="@string/selector_cancel"
+            style="?android:attr/buttonBarButtonStyle"/>
 
         <Button
             android:id="@+id/reservation_okay"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/selector_okay" />
+            android:text="@string/selector_okay"
+            style="?android:attr/buttonBarButtonStyle"/>
     </LinearLayout>
 
 

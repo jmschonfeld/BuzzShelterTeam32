@@ -41,15 +41,16 @@ import edu.gatech.spacebarz.buzzshelter.util.FirebaseDBManager;
 
 public class MapActivity extends FragmentActivity implements OnMapReadyCallback {
 
-    private static final int FILTER_MAP_RETURN_REQUEST_CODE = 1002;
+    private static final int FILTER_MAP_RETURN_REQUEST_CODE = 1002, DEFAULT_ZOOM = 16;
+
+    private static final double EMULATOR_LATITUDE = 33.7776210, EMULATOR_LONGITUDE = -84.4048150;
 
     private GoogleMap map;
     private FloatingActionButton fab;
     private FusedLocationProviderClient locationProvider;
     private static final int PERMISSIONS_REQUEST_LOCATION = 0470;
-    private Shelter[] shelters;
     private CustomShelterFilter filter;
-    private Map<String, String> markerToShelter = new HashMap<String, String>();
+    private final Map<String, String> markerToShelter = new HashMap<>();
 
 
     @Override
@@ -138,13 +139,15 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
 
         UserInfo curUser = FirebaseDBManager.retrieveCurrentUserInfo();
         String resShelter = null;
-        if (curUser != null && curUser.getCurrentReservation() != null)
+        if (curUser != null && curUser.getCurrentReservation() != null) {
             resShelter = FirebaseDBManager.retrieveReservation(curUser.getCurrentReservation()).getShelterID();
+        }
 
-        shelters = FirebaseDBManager.retrieveAllShelters();
+        Shelter[] shelters = FirebaseDBManager.retrieveAllShelters();
         for (final Shelter shelter : shelters) {
-            if (filter != null && !filter.filter(shelter) && (resShelter == null || !resShelter.equals(shelter.getUID())))
+            if (filter != null && !filter.filter(shelter) && (resShelter == null || !resShelter.equals(shelter.getUID()))) {
                 continue;
+            }
 
             final MarkerOptions opts = new MarkerOptions();
             opts.position(new LatLng(shelter.getLat(), shelter.getLon()));
@@ -191,11 +194,11 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
                 Log.i("Location", "Received Location: " + location);
                 LatLng latlng = null;
                 if (Build.FINGERPRINT.contains("generic")) {
-                    latlng = new LatLng(33.7776210, -84.4048150);
+                    latlng = new LatLng(EMULATOR_LATITUDE, EMULATOR_LONGITUDE);
                 } else {
                     latlng = new LatLng(location.getLatitude(), location.getLongitude());
                 }
-                map.moveCamera(CameraUpdateFactory.newLatLngZoom(latlng, 17));
+                map.moveCamera(CameraUpdateFactory.newLatLngZoom(latlng, DEFAULT_ZOOM));
 
             }
         }).addOnFailureListener(new OnFailureListener() {

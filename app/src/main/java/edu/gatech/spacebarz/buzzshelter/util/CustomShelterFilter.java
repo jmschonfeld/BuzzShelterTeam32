@@ -6,22 +6,25 @@ import edu.gatech.spacebarz.buzzshelter.model.Shelter;
 
 // This must be its own class and NOT an inner class because it needs to be serializable
 public class CustomShelterFilter extends ShelterListAdapter.ShelterFilter {
-    private String nameText;
-    private boolean genderMale, genderFemale, genderAll, ageNewborn, ageChild, ageYA, ageAll, veteran;
+    private final String nameText;
+    private final boolean genderMale;
+    private final boolean genderFemale;
+    private final boolean ageNewborn;
+    private final boolean ageChild;
+    private final boolean ageYA;
+    private final boolean veteran;
 
-    public CustomShelterFilter(String n, boolean gm, boolean gf, boolean ga, boolean an, boolean ac, boolean ay, boolean aa, boolean v) {
+    public CustomShelterFilter(String n, boolean gm, boolean gf, boolean an, boolean ac, boolean ay, boolean v) {
         nameText = n;
         genderMale = gm;
         genderFemale = gf;
-        genderAll = ga;
         ageNewborn = an;
         ageChild = ac;
         ageYA = ay;
-        ageAll = aa;
         veteran = v;
     }
 
-
+    @Override
     public boolean filter(Shelter shelter) {
         if (!nameText.trim().equals("") && !shelter.getName().toLowerCase().contains(nameText.trim().toLowerCase())) {
             return false;

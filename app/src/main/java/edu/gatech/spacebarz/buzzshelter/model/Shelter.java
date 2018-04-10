@@ -153,21 +153,22 @@ public class Shelter implements Serializable {
     public int getVacancyNum() {
         int vac = capacityNum;
 
-        if (reservationIDs != null)
-            for (String id : reservationIDs)
-                vac -= (useTestDB) ? TestDatabase.retrReservation(id).getSize() :
-                            FirebaseDBManager.retrieveReservation(id).getSize();
+        if (reservationIDs != null) {
+            for (String id : reservationIDs) {
+                vac -= (useTestDB) ? TestDatabase.retrReservation(id).getSize() : FirebaseDBManager.retrieveReservation(id).getSize();
+            }
+        }
 
         return vac;
     }
 
 
     public enum Gender {
-        MALE, FEMALE, ALL;
+        MALE, FEMALE, ALL
     }
 
     public enum AgeRest {
-        FAMILIESWITHNEWBORNS, CHILDREN, YOUNGADULTS, ALL;
+        FAMILIESWITHNEWBORNS, CHILDREN, YOUNGADULTS, ALL
     }
 
     private String uid, name, capacityStr, restrictions, address, notes, phone;

@@ -48,49 +48,49 @@ public class JeremyTest {
     @Test
     public void testFilterName() {
         System.out.println("testFilterName");
-        listAdapter.setFilter(new CustomShelterFilter("A", false, false, true, false, false, false, true, true));
+        listAdapter.setFilter(new CustomShelterFilter("A", false, false, false, false, false, true));
         assertArrayEquals("Filtering by 'A' failed", new Shelter[]{shelterA}, getShownShelters());
 
-        listAdapter.setFilter(new CustomShelterFilter("C", false, false, true, false, false, false, true, true));
+        listAdapter.setFilter(new CustomShelterFilter("C", false, false, false, false, false, true));
         assertArrayEquals("Filtering by 'C' failed", new Shelter[]{shelterC}, getShownShelters());
 
-        listAdapter.setFilter(new CustomShelterFilter("Shelter", false, false, true, false, false, false, true, true));
+        listAdapter.setFilter(new CustomShelterFilter("Shelter", false, false, false, false, false, true));
         assertArrayEquals("Filtering by 'Shelter' failed: " + Arrays.toString(getShownShelters()), new Shelter[]{shelterA, shelterB, shelterC, shelterD}, getShownShelters());
     }
 
     @Test
     public void testFilterGender() {
-        listAdapter.setFilter(new CustomShelterFilter("", false, false, true, false, false, false, true, true));
+        listAdapter.setFilter(new CustomShelterFilter("", false, false, false, false, false, true));
         assertArrayEquals("Filtering by all genders failed", new Shelter[]{shelterA, shelterB, shelterC, shelterD}, getShownShelters());
 
-        listAdapter.setFilter(new CustomShelterFilter("", false, true, false, false, false, false, true, true));
+        listAdapter.setFilter(new CustomShelterFilter("", false, true, false, false, false, true));
         assertArrayEquals("Filtering by female failed", new Shelter[]{shelterC}, getShownShelters());
 
-        listAdapter.setFilter(new CustomShelterFilter("", true, false, false, false, false, false, true, true));
+        listAdapter.setFilter(new CustomShelterFilter("", true, false, false, false, false, true));
         assertArrayEquals("Filtering by male failed", new Shelter[]{shelterB}, getShownShelters());
     }
 
     @Test
     public void testFilterAge() {
-        listAdapter.setFilter(new CustomShelterFilter("", false, false, true, false, false, false, true, true));
+        listAdapter.setFilter(new CustomShelterFilter("", false, false, false, false, false, true));
         assertArrayEquals("Filtering by all ages failed", new Shelter[]{shelterA, shelterB, shelterC, shelterD}, getShownShelters());
 
-        listAdapter.setFilter(new CustomShelterFilter("", false, false, true, false, false, true, false, true));
+        listAdapter.setFilter(new CustomShelterFilter("", false, false, false, false, true, true));
         assertArrayEquals("Filtering by young adults failed", new Shelter[]{shelterD}, getShownShelters());
 
-        listAdapter.setFilter(new CustomShelterFilter("", false, false, true, false, true, false, false, true));
+        listAdapter.setFilter(new CustomShelterFilter("", false, false, false, true, false, true));
         assertArrayEquals("Filtering by children failed", new Shelter[]{shelterB}, getShownShelters());
 
-        listAdapter.setFilter(new CustomShelterFilter("", false, false, true, true, false, false, false, true));
+        listAdapter.setFilter(new CustomShelterFilter("", false, false, true, false, false, true));
         assertArrayEquals("Filtering by families with newborns failed", new Shelter[]{shelterC}, getShownShelters());
     }
 
     @Test
     public void testFilterVeteran() {
-        listAdapter.setFilter(new CustomShelterFilter("", false, false, true, false, false, false, true, true));
+        listAdapter.setFilter(new CustomShelterFilter("", false, false, false, false, false, true));
         assertArrayEquals("Filtering by veterans failed", new Shelter[]{shelterA, shelterB, shelterC, shelterD}, getShownShelters());
 
-        listAdapter.setFilter(new CustomShelterFilter("", false, false, true, false, false, false, true, false));
+        listAdapter.setFilter(new CustomShelterFilter("", false, false, false, false, false, false));
         assertArrayEquals("Filtering without veterans failed", new Shelter[]{shelterA, shelterB}, getShownShelters());
 
     }

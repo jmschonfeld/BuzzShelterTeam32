@@ -15,6 +15,7 @@ import android.widget.TextView;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.List;
 
 import edu.gatech.spacebarz.buzzshelter.R;
 import edu.gatech.spacebarz.buzzshelter.model.Shelter;
@@ -40,7 +41,7 @@ public class ShelterListAdapter extends ArrayAdapter<Shelter> {
     }
 
     /** Creates a list adapter for the given list of shelters */
-    public ShelterListAdapter(Context context, ArrayList<Shelter> shelters) {
+    public ShelterListAdapter(Context context, List<Shelter> shelters) {
         super(context, R.layout.item_shelter_list, shelters);
         fullData = shelters.toArray(new Shelter[shelters.size()]);
     }
@@ -86,18 +87,19 @@ public class ShelterListAdapter extends ArrayAdapter<Shelter> {
         // Get the data item for this position
         Shelter shelter = getItem(position);
         // Check if an existing view is being reused, otherwise inflate the view
-        if (convertView == null) {
-            convertView = LayoutInflater.from(getContext()).inflate(R.layout.item_shelter_list, parent, false);
+        View theView = convertView;
+        if (theView == null) {
+            theView = LayoutInflater.from(getContext()).inflate(R.layout.item_shelter_list, parent, false);
         }
 
         if (shelter != null) {
-            TextView mainText = convertView.findViewById(R.id.text1);
-            TextView subText = convertView.findViewById(R.id.text2);
-            ImageView newbornImage = convertView.findViewById(R.id.shelter_image_childfriendly);
-            ImageView childImage = convertView.findViewById(R.id.shelter_image_youngadult);
-            ImageView maleImage = convertView.findViewById(R.id.shelter_image_male);
-            ImageView femaleImage = convertView.findViewById(R.id.shelter_image_female);
-            ImageView allGenderImage = convertView.findViewById(R.id.shelter_image_allgender);
+            TextView mainText = theView.findViewById(R.id.text1);
+            TextView subText = theView.findViewById(R.id.text2);
+            ImageView newbornImage = theView.findViewById(R.id.shelter_image_childfriendly);
+            ImageView childImage = theView.findViewById(R.id.shelter_image_youngadult);
+            ImageView maleImage = theView.findViewById(R.id.shelter_image_male);
+            ImageView femaleImage = theView.findViewById(R.id.shelter_image_female);
+            ImageView allGenderImage = theView.findViewById(R.id.shelter_image_allgender);
 
             mainText.setTypeface(Typeface.DEFAULT_BOLD);
             mainText.setText(shelter.getName());
@@ -114,13 +116,19 @@ public class ShelterListAdapter extends ArrayAdapter<Shelter> {
                     maleImage.setVisibility(View.VISIBLE); break;
                 case FEMALE:
                     femaleImage.setVisibility(View.VISIBLE); break;
+                case ALL:
+                    break;
             }
 
             switch (shelter.getAgeRest()) {
                 case FAMILIESWITHNEWBORNS:
-                    newbornImage.setVisibility(View.VISIBLE);
+                    newbornImage.setVisibility(View.VISIBLE); break;
                 case CHILDREN:
-                    childImage.setVisibility(View.VISIBLE);
+                    childImage.setVisibility(View.VISIBLE); break;
+                case YOUNGADULTS:
+                    break;
+                case ALL:
+                    break;
             }
 
         } else {
@@ -128,7 +136,7 @@ public class ShelterListAdapter extends ArrayAdapter<Shelter> {
         }
 
         // Return the completed view to render on screen
-        return convertView;
+        return theView;
     }
 
     public void setFilter(@Nullable ShelterFilter filter) {

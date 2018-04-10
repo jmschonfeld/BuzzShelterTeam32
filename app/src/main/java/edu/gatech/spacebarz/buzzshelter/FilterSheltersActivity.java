@@ -17,7 +17,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import edu.gatech.spacebarz.buzzshelter.util.CustomShelterFilter;
-import edu.gatech.spacebarz.buzzshelter.util.ShelterListAdapter.ShelterFilter;
 import edu.gatech.spacebarz.buzzshelter.util.UIUtil;
 
 public class FilterSheltersActivity extends AppCompatActivity {
@@ -26,7 +25,6 @@ public class FilterSheltersActivity extends AppCompatActivity {
 
     private EditText nameFilter;
     private RadioButton genderMaleRadio, genderFemaleRadio, genderAllRadio, ageNewbornRadio, ageChildRadio, ageYARadio, ageAllRadio;
-    private RadioGroup groupGender, groupAge;
     private CheckBox veteranBox;
 
     @Override
@@ -53,8 +51,8 @@ public class FilterSheltersActivity extends AppCompatActivity {
         veteranBox = findViewById(R.id.shelter_filter_veteran);
         final Button filterButton = findViewById(R.id.shelter_filter_button);
 
-        groupGender = findViewById(R.id.shelter_filter_gender_group);
-        groupAge = findViewById(R.id.shelter_filter_age_group);
+        RadioGroup groupGender = findViewById(R.id.shelter_filter_gender_group);
+        RadioGroup groupAge = findViewById(R.id.shelter_filter_age_group);
 
         nameFilter.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -112,8 +110,6 @@ public class FilterSheltersActivity extends AppCompatActivity {
         final boolean ageAll = ageAllRadio.isChecked();
         final boolean veteran = veteranBox.isChecked();
 
-        ShelterFilter filter = new CustomShelterFilter(nameText, genderMale, genderFemale, genderAll, ageNewborn, ageChild, ageYA, ageAll, veteran);
-
         if (!genderMale && !genderFemale && !genderAll) {
             Toast.makeText(this, "You must select a gender", Toast.LENGTH_LONG).show();
             return;
@@ -124,7 +120,7 @@ public class FilterSheltersActivity extends AppCompatActivity {
         }
 
         Intent intent = new Intent();
-        intent.putExtra("filter", filter);
+        intent.putExtra("filter", new CustomShelterFilter(nameText, genderMale, genderFemale, ageNewborn, ageChild, ageYA, veteran));
         finishedFilter = true;
         setResult(RESULT_OK, intent);
         finish();

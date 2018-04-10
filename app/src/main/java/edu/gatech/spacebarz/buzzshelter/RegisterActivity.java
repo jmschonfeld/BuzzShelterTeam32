@@ -1,7 +1,6 @@
 package edu.gatech.spacebarz.buzzshelter;
 
 import android.annotation.SuppressLint;
-import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -9,7 +8,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -61,8 +59,9 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     private void register() {
-        if (regTask != null)
+        if (regTask != null) {
             return;
+        }
 
         boolean preSubErr = false;
         View focusView = null;
@@ -100,11 +99,12 @@ public class RegisterActivity extends AppCompatActivity {
             return;
         }
 
+        UIUtil.closeSoftKeyboard(getCurrentFocus(), getBaseContext());
         regTask = new UserRegistrationTask(eml, pass, name, phone, role);
         regTask.execute((Void) null);
     }
 
-    public void closeOnSuccess() {
+    private void closeOnSuccess() {
         Toast.makeText(getApplicationContext(), R.string.toast_account_created, Toast.LENGTH_SHORT).show();
 //      Undo auto sign in
         FirebaseAuthManager.signout();
@@ -113,7 +113,7 @@ public class RegisterActivity extends AppCompatActivity {
 
 
     @SuppressLint("StaticFieldLeak")
-    public class UserRegistrationTask extends AsyncTask<Void, Void, Boolean> {
+    class UserRegistrationTask extends AsyncTask<Void, Void, Boolean> {
         private Exception exe;
         private boolean succ;
         private final String email, password, name, phone;
@@ -126,7 +126,6 @@ public class RegisterActivity extends AppCompatActivity {
             phone = phn;
             role = rl;
             progressBar.setVisibility(View.VISIBLE);
-            UIUtil.closeSoftKeyboard(getCurrentFocus(), getBaseContext());
         }
 
         @Override
@@ -175,8 +174,9 @@ public class RegisterActivity extends AppCompatActivity {
                     Log.e("Registration(Firebase)", exe.getMessage());
                 }
 
-                if (focusView != null)
+                if (focusView != null) {
                     focusView.requestFocus();
+                }
             }
         }
     }
