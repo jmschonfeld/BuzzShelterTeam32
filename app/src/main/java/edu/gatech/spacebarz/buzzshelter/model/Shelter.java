@@ -6,6 +6,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 
 import edu.gatech.spacebarz.buzzshelter.util.FirebaseDBManager;
+import edu.gatech.spacebarz.buzzshelter.util.TestDatabase;
 
 @IgnoreExtraProperties
 public class Shelter implements Serializable {
@@ -28,6 +29,7 @@ public class Shelter implements Serializable {
         ageRest = age;
         veteran = vet;
         reservationIDs = reservations;
+        useTestDB = false;
     }
 
     @Override
@@ -139,6 +141,10 @@ public class Shelter implements Serializable {
         this.reservationIDs = reservationIDs;
     }
 
+    public void useTestDB() {
+        useTestDB = true;
+    }
+
     @Override
     public String toString() {
         return "Shelter-" + this.uid;
@@ -149,7 +155,7 @@ public class Shelter implements Serializable {
 
         if (reservationIDs != null) {
             for (String id : reservationIDs) {
-                vac -= FirebaseDBManager.retrieveReservation(id).getSize();
+                vac -= (useTestDB) ? TestDatabase.retrReservation(id).getSize() : FirebaseDBManager.retrieveReservation(id).getSize();
             }
         }
 
@@ -170,7 +176,7 @@ public class Shelter implements Serializable {
     private double lat, lon;
     private Gender gender;
     private AgeRest ageRest;
-    private boolean veteran;
+    private boolean veteran, useTestDB;
     private ArrayList<String> reservationIDs;
 }
 
