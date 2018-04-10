@@ -24,6 +24,7 @@ public class MayaTest {
 //        assertEquals(UserInfo.UserRole.findUserRole(null), null);
         assertEquals(UserInfo.UserRole.findUserRole("abc"), null);
         assertEquals(UserInfo.UserRole.findUserRole("Administrator"), UserInfo.UserRole.ADMINISTRATOR);
+        assertEquals(UserInfo.UserRole.findUserRole("ADMINISTRATOR"), UserInfo.UserRole.ADMINISTRATOR);
 
     }
 }
