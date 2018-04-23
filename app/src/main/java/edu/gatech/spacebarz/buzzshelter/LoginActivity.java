@@ -3,6 +3,7 @@ package edu.gatech.spacebarz.buzzshelter;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -32,6 +33,9 @@ import edu.gatech.spacebarz.buzzshelter.util.FirebaseAuthManager;
 import edu.gatech.spacebarz.buzzshelter.util.UIUtil;
 
 public class LoginActivity extends AppCompatActivity {
+
+    private final String SS_PREFERENCES = "ShelterSeekerPreferences", LOGIN_ATTEMPTS_PREF = "loginAttempts", LAST_LOGIN_PREF = "lastLoginAttempt";
+
     private UserLoginTask mAuthTask = null;
 
     // UI references.
@@ -39,12 +43,17 @@ public class LoginActivity extends AppCompatActivity {
     private EditText mPasswordView;
     private ProgressBar progressBar;
 
+    private SharedPreferences prefs;
+    private int attempts;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
         FirebaseAuthManager.initialize();
+
+        prefs = this.getSharedPreferences(SS_PREFERENCES, 0);
 
         loggingIn = false;
 
@@ -129,6 +138,18 @@ public class LoginActivity extends AppCompatActivity {
         // Reset errors.
         loginView.setError(null);
         mPasswordView.setError(null);
+
+        attempts = prefs.getInt(LOGIN_ATTEMPTS_PREF, 0);
+        long lastAttempt = prefs.getLong(LAST_LOGIN_PREF, 0);
+        if (lastAttempt < System.currentTimeMillis() - 1000 * 60 * 3) {
+            attempts = 0;
+            prefs.edit().putInt(LOGIN_ATTEMPTS_PREF, 0).putLong(LAST_LOGIN_PREF, 0).apply();
+        }
+
+        if (attempts >= 3) {
+            mPasswordView.setError("Too many attempts. You have been locked out for 5 minutes");
+            return;
+        }
 
         // Store values at the time of the login attempt.
         String password = mPasswordView.getText().toString().trim();
@@ -220,8 +241,10 @@ public class LoginActivity extends AppCompatActivity {
             mAuthTask = null;
 
             if (success) {
+                prefs.edit().putInt(LOGIN_ATTEMPTS_PREF, 0).putLong(LAST_LOGIN_PREF, 0).apply();
                 moveToMainActivity();
             } else {
+                prefs.edit().putInt(LOGIN_ATTEMPTS_PREF, attempts + 1).putLong(LAST_LOGIN_PREF, System.currentTimeMillis()).apply();
                 if (exe instanceof FirebaseAuthInvalidCredentialsException || exe instanceof FirebaseAuthInvalidUserException) {
                     mPasswordView.requestFocus();
                     mPasswordView.setError("Invalid email or password");
