@@ -34,7 +34,7 @@ import edu.gatech.spacebarz.buzzshelter.util.UIUtil;
 
 public class LoginActivity extends AppCompatActivity {
 
-    private final String SS_PREFERENCES = "ShelterSeekerPreferences", LOGIN_ATTEMPTS_PREF = "loginAttempts", LAST_LOGIN_PREF = "lastLoginAttempt";
+    private final String SS_PREFERENCES = "ShelterSeekerLoginPreferences", LOGIN_ATTEMPTS_PREF = "loginAttempts", LAST_LOGIN_PREF = "lastLoginAttempt";
 
     private UserLoginTask mAuthTask = null;
 
