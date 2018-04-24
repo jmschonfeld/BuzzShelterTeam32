@@ -77,6 +77,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
                     android:layout_weight="1"
+                    android:fontFamily="sans-serif"
                     android:text="@string/action_sign_in"
                     android:textStyle="bold" />
 
@@ -84,8 +85,11 @@
 
             <Button
                 android:id="@+id/recovery_button"
+                style="?android:textAppearanceSmall"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:fontFamily="sans-serif"
+                android:textStyle="bold"
                 android:text="@string/login_recovery_button_title"
                 android:layout_gravity="center_horizontal"/>
 
@@ -97,7 +101,7 @@
                 android:layout_marginTop="8dp"
                 android:backgroundTint="#fafafa"
                 android:indeterminate="true"
-                android:indeterminateTint="#1a09d6"
+                android:indeterminateTint="@color/colorAccent"
                 android:max="100" />
         </LinearLayout>
     </ScrollView>
